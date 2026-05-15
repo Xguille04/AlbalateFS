@@ -1,0 +1,18 @@
+/* 1. Define el recorrido: Empieza en 0 y se desplaza hasta la mitad exacta (-50%) */
+@keyframes scroll-infinito {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* 2. Aplica el motor a la clase que pusimos en el HTML */
+.carrusel-animado {
+  /* 30 segundos de duración, velocidad lineal (sin tirones) e infinito */
+  animation: scroll-infinito 10s linear infinite;
+  /* Opcional: Asegura que el navegador acelere la animación por hardware */
+  will-change: transform;
+}
+
+/* 3. Pausa la cinta cuando el usuario pone el cursor encima para leer los datos 
+.carrusel-animado:hover {
+  animation-play-state: paused;
+}*/

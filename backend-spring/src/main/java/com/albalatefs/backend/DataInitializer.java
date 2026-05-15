@@ -1,0 +1,303 @@
+package com.albalatefs.backend;
+
+import com.albalatefs.backend.model.*;
+import com.albalatefs.backend.repository.*;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
+
+@Component
+public class DataInitializer implements CommandLineRunner {
+
+    private final UsuarioRepository usuarioRepo;
+    private final JugadorRepository jugadorRepo;
+    private final PartidoRepository partidoRepo;
+    private final NoticiaRepository noticiaRepo;
+    private final SocioRepository socioRepo;
+    private final EstadisticaJugadorRepository estadisticaRepo;
+    private final VideoTacticoRepository videoRepo;
+    private final ProductoRepository productoRepo;
+    private final PasswordEncoder passwordEncoder;
+
+    public DataInitializer(UsuarioRepository usuarioRepo,
+                           JugadorRepository jugadorRepo,
+                           PartidoRepository partidoRepo,
+                           NoticiaRepository noticiaRepo,
+                           SocioRepository socioRepo,
+                           EstadisticaJugadorRepository estadisticaRepo,
+                           VideoTacticoRepository videoRepo,
+                           ProductoRepository productoRepo,
+                           PasswordEncoder passwordEncoder) {
+        this.usuarioRepo = usuarioRepo;
+        this.jugadorRepo = jugadorRepo;
+        this.partidoRepo = partidoRepo;
+        this.noticiaRepo = noticiaRepo;
+        this.socioRepo = socioRepo;
+        this.estadisticaRepo = estadisticaRepo;
+        this.videoRepo = videoRepo;
+        this.productoRepo = productoRepo;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public void run(String... args) {
+        // Re-seed si la base de datos está vacía o si los datos no tienen los campos nuevos
+        if (usuarioRepo.count() > 0) {
+            boolean tieneNuevosCampos = jugadorRepo.count() > 0 &&
+                jugadorRepo.findAll().get(0).getPiernasDominante() != null;
+            boolean tieneRolEntrenador = usuarioRepo.findByEmail("edu@albalatefs.com")
+                .map(u -> "ENTRENADOR".equals(u.getRol()))
+                .orElse(false);
+
+            if (tieneNuevosCampos && tieneRolEntrenador) {
+                // Usuarios/jugadores OK → solo seedear productos si faltan
+                if (productoRepo.count() == 0) {
+                    seedProductos();
+                }
+                return;
+            }
+            // Limpiar datos antiguos para re-sembrar
+            estadisticaRepo.deleteAll();
+            videoRepo.deleteAll();
+            socioRepo.deleteAll();
+            noticiaRepo.deleteAll();
+            jugadorRepo.deleteAll();
+            partidoRepo.deleteAll();
+            usuarioRepo.deleteAll();
+        }
+
+        // ── USUARIOS ────────────────────────────────────────────────────────
+        String pass = passwordEncoder.encode("albalate2026");
+
+        Usuario uAitor   = usuarioRepo.save(new Usuario(null, "aitor@albalatefs.com",   pass, "JUGADOR"));
+        Usuario uAnas    = usuarioRepo.save(new Usuario(null, "anas@albalatefs.com",     pass, "JUGADOR"));
+        Usuario uBombo   = usuarioRepo.save(new Usuario(null, "bombo@albalatefs.com",    pass, "JUGADOR"));
+        Usuario uCarlos  = usuarioRepo.save(new Usuario(null, "carlos@albalatefs.com",   pass, "JUGADOR"));
+        Usuario uCesar   = usuarioRepo.save(new Usuario(null, "cesar@albalatefs.com",    pass, "JUGADOR"));
+        Usuario uEdu     = usuarioRepo.save(new Usuario(null, "edu@albalatefs.com",      pass, "ENTRENADOR"));
+        Usuario uFofi    = usuarioRepo.save(new Usuario(null, "fofi@albalatefs.com",     pass, "JUGADOR"));
+        Usuario uGuille  = usuarioRepo.save(new Usuario(null, "guille@albalatefs.com",   pass, "JUGADOR"));
+        Usuario uGuiral  = usuarioRepo.save(new Usuario(null, "guiral@albalatefs.com",   pass, "JUGADOR"));
+        Usuario uManu    = usuarioRepo.save(new Usuario(null, "manu@albalatefs.com",     pass, "JUGADOR"));
+        Usuario uRodrigo = usuarioRepo.save(new Usuario(null, "rodrigo@albalatefs.com",  pass, "JUGADOR"));
+        Usuario uSergio  = usuarioRepo.save(new Usuario(null, "sergio@albalatefs.com",   pass, "JUGADOR"));
+        Usuario uTono    = usuarioRepo.save(new Usuario(null, "tono@albalatefs.com",     pass, "JUGADOR"));
+        usuarioRepo.save(new Usuario(null, "admin@albalatefs.com", passwordEncoder.encode("admin2026"), "ADMIN"));
+
+        // ── JUGADORES ───────────────────────────────────────────────────────
+        Jugador aitor   = jugadorRepo.save(new Jugador(null, "Aitor",     "Lazaro",           1,  "Portero",      "assets/jugadores/aitor.JPG",   LocalDate.of(1999,  3, 15), 2, "Derecha",    uAitor));
+        Jugador anas    = jugadorRepo.save(new Jugador(null, "Anas",      "Benali Moussaoui", 2,  "Ala",          "assets/jugadores/anas.JPG",    LocalDate.of(2001,  7, 22), 2, "Ambas",    uAnas));
+        Jugador bombo   = jugadorRepo.save(new Jugador(null, "Javier",    "Bernad",           15, "Pívot",        "assets/jugadores/bombo.JPG",   LocalDate.of(1997, 11,  8), 1, "Izquierda",    uBombo));
+        Jugador carlos  = jugadorRepo.save(new Jugador(null, "Carlos",    "Bernad",           11, "Pívot",        "assets/jugadores/carlos.JPG",  LocalDate.of(1998,  5, 14), 2, "Derecha",    uCarlos));
+        Jugador cesar   = jugadorRepo.save(new Jugador(null, "César",     "Gascón",           9,  "Pívot",        "assets/jugadores/cesar.JPG",   LocalDate.of(1995,  9, 30), 2, "Derecha",    uCesar));
+        Jugador edu     = jugadorRepo.save(new Jugador(null, "Edu",       "Gascón",           9,  "Entrenador",   "assets/jugadores/edu.JPG",     LocalDate.of(1993,  4, 12), 2, "Derecha",    uEdu));
+        Jugador fofi    = jugadorRepo.save(new Jugador(null, "Carlos",    "Garralaga",        13, "Portero",      "assets/jugadores/fofi.JPG",    LocalDate.of(2000,  2, 28), 2, "Derecha",    uFofi));
+        Jugador guille  = jugadorRepo.save(new Jugador(null, "Guillermo", "Ayuda",            4,  "Cierre/Ala",   "assets/jugadores/guille.JPG",  LocalDate.of(1996,  8,  5), 1, "Derecha",  uGuille));
+        Jugador guiral  = jugadorRepo.save(new Jugador(null, "Sergio",    "Guiral",           8,  "Cierre/Pívot", "assets/jugadores/guiral.JPG",  LocalDate.of(1998, 12, 19), 2, "Derecha",    uGuiral));
+        Jugador manu    = jugadorRepo.save(new Jugador(null, "Manuel",    "Fernandez",        10, "Cierre",       "assets/jugadores/manu.JPG",    LocalDate.of(2002,  6, 11), 2, "Derecha",    uManu));
+        Jugador rodrigo = jugadorRepo.save(new Jugador(null, "Rodrigo",   "Fernandez",        7,  "Pívot",        "assets/jugadores/rodrigo.JPG", LocalDate.of(1999, 10, 24), 2, "Izquierda",  uRodrigo));
+        Jugador sergio  = jugadorRepo.save(new Jugador(null, "Sergio",    "Sauras",           6,  "Ala",          "assets/jugadores/sergio.JPG",  LocalDate.of(2000,  3,  7), 2, "Derecha",    uSergio));
+        Jugador tono    = jugadorRepo.save(new Jugador(null, "Toño",      "Izquierdo",        5,  "Ala/Pívot",    "assets/jugadores/tono.JPG",    LocalDate.of(1994,  1, 18), 2, "Derecha",      uTono));
+
+        // ── PARTIDOS ────────────────────────────────────────────────────────
+        Partido p1  = partidoRepo.save(new Partido(null, ldt(2026, 1, 10, 19, 0), "Albalate FS", "CD Andorra",          5, 2, "Pabellón Municipal Albalate", "FINALIZADO"));
+        Partido p2  = partidoRepo.save(new Partido(null, ldt(2026, 1, 17, 18, 30), "FS Caspe",    "Albalate FS",         1, 4, "Pabellón FS Caspe",           "FINALIZADO"));
+        Partido p3  = partidoRepo.save(new Partido(null, ldt(2026, 1, 24, 19, 0), "Albalate FS", "Azuara Futsal",       3, 3, "Pabellón Municipal Albalate", "FINALIZADO"));
+        Partido p4  = partidoRepo.save(new Partido(null, ldt(2026, 2, 7,  19, 0), "Albalate FS", "CD Belchite",         6, 1, "Pabellón Municipal Albalate", "FINALIZADO"));
+        Partido p5  = partidoRepo.save(new Partido(null, ldt(2026, 2, 14, 18, 0), "Fuendetodos FS", "Albalate FS",      0, 5, "Pabellón Fuendetodos",        "FINALIZADO"));
+        Partido p6  = partidoRepo.save(new Partido(null, ldt(2026, 2, 21, 19, 0), "Albalate FS", "Híjar Futsal",        2, 1, "Pabellón Municipal Albalate", "FINALIZADO"));
+        Partido p7  = partidoRepo.save(new Partido(null, ldt(2026, 3, 7,  19, 0), "Albalate FS", "Quinto Futsal",       4, 0, "Pabellón Municipal Albalate", "FINALIZADO"));
+        Partido p8  = partidoRepo.save(new Partido(null, ldt(2026, 3, 14, 18, 30), "FS Alcañiz",  "Albalate FS",         3, 2, "Pabellón FS Alcañiz",         "FINALIZADO"));
+        Partido p9  = partidoRepo.save(new Partido(null, ldt(2026, 3, 21, 19, 0), "Albalate FS", "CD La Puebla",        5, 1, "Pabellón Municipal Albalate", "FINALIZADO"));
+        Partido p10 = partidoRepo.save(new Partido(null, ldt(2026, 4, 4,  19, 0), "Albalate FS", "Azuara Futsal",       3, 2, "Pabellón Municipal Albalate", "FINALIZADO"));
+        Partido p11 = partidoRepo.save(new Partido(null, ldt(2026, 4, 18, 18, 30), "CD Andorra",  "Albalate FS",         1, 3, "Pabellón CD Andorra",         "FINALIZADO"));
+        Partido p12 = partidoRepo.save(new Partido(null, ldt(2026, 4, 25, 19, 0), "Albalate FS", "Híjar Futsal",        4, 2, "Pabellón Municipal Albalate", "FINALIZADO"));
+        // Próximos partidos
+        partidoRepo.save(new Partido(null, ldt(2026, 5, 16, 19, 0), "Albalate FS", "Quinto Futsal",  null, null, "Pabellón Municipal Albalate", "PROXIMO"));
+        partidoRepo.save(new Partido(null, ldt(2026, 5, 23, 18, 30), "FS Caspe",    "Albalate FS",    null, null, "Pabellón FS Caspe",           "PROXIMO"));
+        partidoRepo.save(new Partido(null, ldt(2026, 6, 6,  19, 0), "Albalate FS", "CD Belchite",    null, null, "Pabellón Municipal Albalate", "PROXIMO"));
+
+        // ── NOTICIAS ────────────────────────────────────────────────────────
+        noticiaRepo.save(new Noticia(null,
+            "Gran victoria ante el CD Andorra: 5-2 en casa",
+            "El Albalate FS arranca la temporada con pie derecho ante la afición.",
+            "El equipo mostró una gran solidez defensiva y una eficacia goleadora que augura una gran temporada. Carlos y Edu fueron los protagonistas con un doblete cada uno, mientras que Anas cerró la cuenta desde el extremo. La afición llenó el pabellón y vivió noventa minutos de fútbol sala de alta intensidad.",
+            ldt(2026, 1, 11, 10, 0), "Crónica", null));
+
+        noticiaRepo.save(new Noticia(null,
+            "Remontada épica en Caspe: 1-4 lejos de casa",
+            "El equipo remontó un 1-0 en el descanso con una segunda parte brillante.",
+            "Nadie esperaba el inicio que tuvo el partido. Caspe se puso por delante a los 8 minutos, pero el Albalate FS respondió con carácter. Rodrigo igualó antes del descanso y en la segunda mitad el equipo fue imparable. Guille, Carlos y Tono marcaron para sellar una victoria histórica fuera de casa.",
+            ldt(2026, 1, 18, 9, 30), "Crónica", null));
+
+        noticiaRepo.save(new Noticia(null,
+            "El Albalate FS renueva a su portero Aitor García por dos temporadas",
+            "El guardameta amplía su vinculación con el club hasta 2028.",
+            "Aitor García, uno de los pilares fundamentales del equipo durante las últimas campañas, ha renovado su contrato con el Albalate FS por dos temporadas más. El portero, de 27 años, ha sido clave en la solidez defensiva del equipo con una media de menos de dos goles encajados por partido. 'Estoy muy feliz aquí, es mi casa', declaró tras firmar.",
+            ldt(2026, 1, 25, 11, 0), "Club", null));
+
+        noticiaRepo.save(new Noticia(null,
+            "Paliza ante el CD Belchite: 6-1 y liderato consolidado",
+            "El Albalate FS golea y se coloca líder en solitario de su grupo.",
+            "Partido para enmarcar. El CD Belchite no pudo hacer nada ante un Albalate FS arrollador. Edu fue el gran protagonista con un hat-trick, mientras que Carlos, Anas y Guille completaron la goleada. El equipo mantiene así la mejor defensa del grupo y el segundo mejor ataque.",
+            ldt(2026, 2, 8, 10, 0), "Crónica", null));
+
+        noticiaRepo.save(new Noticia(null,
+            "El equipo trabaja en el camp físico de cara al tramo final",
+            "La plantilla intensifica los entrenamientos con un preparador físico externo.",
+            "El Albalate FS ha contratado los servicios de un preparador físico especializado en fútbol sala para el tramo final de la temporada regular. Los jugadores están realizando doble sesión los miércoles para llegar en las mejores condiciones posibles al play-off de ascenso.",
+            ldt(2026, 3, 5, 12, 0), "Club", null));
+
+        noticiaRepo.save(new Noticia(null,
+            "La peña 'Los Bomberillos' organiza una marcha solidaria en apoyo al club",
+            "Más de 150 aficionados participaron en la marcha por los montes de Albalate.",
+            "La afición del Albalate FS volvió a demostrar su compromiso con el club. La peña 'Los Bomberillos' organizó una marcha solidaria con punto de salida en el pabellón municipal. Participaron más de 150 personas y se recaudaron fondos para el desplazamiento a las fases finales.",
+            ldt(2026, 3, 22, 9, 0), "Afición", null));
+
+        noticiaRepo.save(new Noticia(null,
+            "Previa: Albalate FS - Quinto Futsal, duelo de aspirantes",
+            "El próximo sábado se decide quién lleva la ventaja de cara al play-off.",
+            "El partido del sábado 16 de mayo enfrenta a los dos equipos con más opciones de ascender directamente. El Albalate FS llega con tres puntos de ventaja pero con el factor campo en contra si el resultado global es desfavorable. Se espera lleno absoluto en el pabellón.",
+            ldt(2026, 5, 13, 8, 0), "Previa", null));
+
+        // ── SOCIOS ──────────────────────────────────────────────────────────
+        socioRepo.save(new Socio(null, "Miguel",   "Lorente García",   "12345678A", "miguel.lorente@gmail.com",   "634111222", date(2024, 9, 1)));
+        socioRepo.save(new Socio(null, "Raquel",   "Blasco Ferrer",    "23456789B", "rblasco@hotmail.com",        "645222333", date(2024, 9, 15)));
+        socioRepo.save(new Socio(null, "Fernando", "Querol Navarro",   "34567890C", "fernando.querol@gmail.com",  "656333444", date(2024, 10, 3)));
+        socioRepo.save(new Socio(null, "Lucía",    "Moya Pérez",       "45678901D", "lucia.moya@gmail.com",       "667444555", date(2024, 10, 20)));
+        socioRepo.save(new Socio(null, "Javier",   "Ariño Estrada",    "56789012E", "jarino@outlook.com",         "678555666", date(2024, 11, 5)));
+        socioRepo.save(new Socio(null, "Elena",    "Pallarés Ibáñez",  "67890123F", "elena.pallares@gmail.com",   "689666777", date(2025, 1, 10)));
+        socioRepo.save(new Socio(null, "Tomás",    "Guillén Morte",    "78901234G", "tguillen@gmail.com",         "690777888", date(2025, 2, 14)));
+        socioRepo.save(new Socio(null, "Amparo",   "Sancho Villalba",  "89012345H", "amparo.sancho@hotmail.com",  "601888999", date(2025, 3, 1)));
+
+        // ── ESTADÍSTICAS ────────────────────────────────────────────────────
+        // Partidos finalizados: p1..p12
+        List<Partido> finalizados = List.of(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12);
+
+        // [goles, asistencias, minutos, calificacion] por jugador y partido
+        int[][][] stats = {
+            // p1 (5-2 vs Andorra)
+            {{2,1,40,8},{1,2,38,9},{0,0,20,6},{2,1,40,9},{0,1,40,8},{0,0,0,0},{1,0,35,7},{0,1,40,8},{0,0,40,7},{0,0,0,0},{0,1,30,7},{0,0,25,7},{0,0,20,6}},
+            // p2 (1-4 en Caspe)
+            {{0,0,40,7},{1,1,40,9},{0,1,35,8},{1,2,40,9},{0,0,40,8},{0,0,0,0},{0,0,30,7},{1,0,40,8},{0,1,40,8},{0,0,0,0},{1,1,35,8},{0,0,20,6},{0,0,15,6}},
+            // p3 (3-3 vs Azuara)
+            {{0,0,40,6},{0,1,40,7},{1,0,40,7},{1,1,40,8},{0,0,40,7},{1,0,30,7},{0,0,25,6},{0,1,35,7},{0,0,40,7},{0,0,0,0},{1,0,30,7},{0,0,20,6},{0,0,20,6}},
+            // p4 (6-1 vs Belchite)
+            {{0,0,40,8},{1,2,40,9},{0,1,35,8},{2,1,40,9},{0,0,40,8},{3,0,35,9},{0,0,0,0},{1,1,40,9},{0,0,40,7},{0,0,0,0},{0,1,30,7},{0,0,25,7},{0,0,20,7}},
+            // p5 (0-5 en Fuendetodos)
+            {{0,0,40,9},{2,1,38,9},{0,1,35,8},{1,2,40,8},{0,0,40,7},{0,0,30,7},{0,0,0,0},{1,0,40,8},{0,1,40,8},{0,0,0,0},{1,1,35,8},{0,0,25,7},{0,0,20,6}},
+            // p6 (2-1 vs Híjar)
+            {{0,0,40,8},{1,0,40,8},{0,1,35,7},{0,1,40,8},{0,0,40,7},{0,0,0,0},{0,0,30,7},{1,0,35,8},{0,0,40,7},{0,0,0,0},{0,1,30,7},{0,0,25,6},{0,0,20,6}},
+            // p7 (4-0 vs Quinto)
+            {{0,0,40,8},{1,1,40,9},{0,1,35,8},{1,1,40,8},{0,0,40,7},{1,0,35,8},{0,0,0,0},{0,1,40,7},{0,0,40,7},{0,0,0,0},{2,0,35,9},{0,0,25,7},{0,0,20,6}},
+            // p8 (3-2 en Alcañiz)
+            {{0,0,40,7},{0,1,40,8},{1,0,35,8},{1,1,40,8},{0,0,40,7},{0,0,0,0},{0,0,30,7},{1,1,40,8},{0,0,40,7},{0,0,0,0},{0,1,30,7},{0,0,25,6},{0,0,20,6}},
+            // p9 (5-1 vs La Puebla)
+            {{0,0,40,8},{2,0,40,9},{0,1,35,8},{1,2,40,9},{0,0,40,7},{1,0,30,8},{0,0,0,0},{0,1,40,8},{0,0,40,7},{0,0,0,0},{1,1,35,8},{0,0,25,7},{0,0,20,6}},
+            // p10 (3-2 vs Azuara)
+            {{0,0,40,8},{1,1,38,8},{0,1,35,8},{1,0,40,8},{0,0,40,7},{0,0,0,0},{0,0,30,7},{1,1,35,8},{0,0,40,7},{0,0,0,0},{0,1,30,7},{0,0,25,7},{0,0,20,6}},
+            // p11 (3-1 en Andorra)
+            {{0,0,40,8},{1,0,40,9},{0,1,35,8},{0,2,40,8},{0,0,40,7},{1,0,30,8},{0,0,0,0},{1,1,40,9},{0,0,40,7},{0,0,0,0},{0,1,35,7},{0,0,25,7},{0,0,20,6}},
+            // p12 (4-2 vs Híjar)
+            {{0,0,40,8},{1,1,40,9},{0,0,35,7},{2,1,40,9},{0,0,40,7},{1,0,30,8},{0,0,0,0},{0,1,40,8},{0,0,40,7},{0,0,0,0},{0,2,35,8},{0,0,25,7},{0,0,20,6}},
+        };
+
+        Jugador[] jugadores = {aitor, anas, bombo, carlos, cesar, edu, fofi, guille, guiral, manu, rodrigo, sergio, tono};
+        for (int i = 0; i < finalizados.size(); i++) {
+            for (int j = 0; j < jugadores.length; j++) {
+                int[] s = stats[i][j];
+                if (s[2] > 0) { // solo si jugó minutos
+                    estadisticaRepo.save(new EstadisticaJugador(null,
+                        jugadores[j], finalizados.get(i), s[0], s[1], s[2], s[3]));
+                }
+            }
+        }
+
+        // ── VÍDEOS TÁCTICOS ─────────────────────────────────────────────────
+        videoRepo.save(new VideoTactico(null, "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "Análisis defensivo jornada 1 - Bloque medio bajo", ldt(2026, 1, 12, 10, 0), List.of()));
+        videoRepo.save(new VideoTactico(null, "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "Corrección ofensiva: salida de balón desde portería", ldt(2026, 1, 19, 10, 0), List.of(aitor)));
+        videoRepo.save(new VideoTactico(null, "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "Movimientos en ataque posicional - Temporada 25/26", ldt(2026, 2, 10, 10, 0), List.of()));
+        videoRepo.save(new VideoTactico(null, "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "Análisis individual: finalización de Carlos - Jornada 4", ldt(2026, 2, 9, 11, 0), List.of(carlos)));
+        videoRepo.save(new VideoTactico(null, "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "Presión alta y recuperación de balón", ldt(2026, 3, 8, 10, 0), List.of()));
+
+        // ── PRODUCTOS TIENDA ─────────────────────────────────────────────────
+        if (productoRepo.count() == 0) {
+            seedProductos();
+        }
+
+        System.out.println("✅ Base de datos inicializada con datos de prueba.");
+    }
+
+    private void seedProductos() {
+        productoRepo.save(new Producto(null, "Camiseta Oficial 1ª Equipación 25/26",
+            "Camiseta oficial de juego del Albalate FS. Tejido técnico transpirable. Tallas S-XXL.",
+            new java.math.BigDecimal("35.00"),
+            "https://images.unsplash.com/photo-1562575214-da9fcf59b907?w=400",
+            "Ropa", 50, true));
+        productoRepo.save(new Producto(null, "Camiseta Oficial 2ª Equipación 25/26",
+            "Camiseta alternativa del Albalate FS. Edición limitada temporada 25/26.",
+            new java.math.BigDecimal("35.00"),
+            "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400",
+            "Ropa", 30, false));
+        productoRepo.save(new Producto(null, "Chándal Oficial Albalate FS",
+            "Conjunto de chándal con escudo bordado. Ideal para calentamiento y uso casual.",
+            new java.math.BigDecimal("55.00"),
+            "https://images.unsplash.com/photo-1516478177764-9fe5bd7e9717?w=400",
+            "Ropa", 20, true));
+        productoRepo.save(new Producto(null, "Bufanda Albalate FS",
+            "Bufanda de punto con los colores del club. Perfecta para animar en el pabellón.",
+            new java.math.BigDecimal("12.00"),
+            "https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?w=400",
+            "Accesorios", 100, false));
+        productoRepo.save(new Producto(null, "Gorra Albalate FS",
+            "Gorra ajustable con escudo bordado. Talla única.",
+            new java.math.BigDecimal("15.00"),
+            "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400",
+            "Accesorios", 60, false));
+        productoRepo.save(new Producto(null, "Llavero Escudo",
+            "Llavero metálico con el escudo del Albalate FS. Acabado premium.",
+            new java.math.BigDecimal("5.00"),
+            "https://images.unsplash.com/photo-1558171813-0e6de3e59af9?w=400",
+            "Accesorios", 200, false));
+        productoRepo.save(new Producto(null, "Balón Oficial Entrenamiento",
+            "Balón de fútbol sala oficial de los entrenamientos del equipo. Talla 4.",
+            new java.math.BigDecimal("28.00"),
+            "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=400",
+            "Equipamiento", 15, true));
+        productoRepo.save(new Producto(null, "Mochila Albalate FS",
+            "Mochila deportiva con compartimentos y escudo del club. 30L de capacidad.",
+            new java.math.BigDecimal("40.00"),
+            "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400",
+            "Equipamiento", 25, true));
+        productoRepo.save(new Producto(null, "Taza Albalate FS",
+            "Taza de cerámica con el escudo y colores del club. 330ml.",
+            new java.math.BigDecimal("8.00"),
+            "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=400",
+            "Accesorios", 80, false));
+        productoRepo.save(new Producto(null, "Calcetines Técnicos (pack x3)",
+            "Pack de 3 pares de calcetines técnicos con el logo del club. Tallas 36-46.",
+            new java.math.BigDecimal("10.00"),
+            "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=400",
+            "Ropa", 40, false));
+        System.out.println("✅ 10 productos de tienda insertados.");
+    }
+
+    private LocalDateTime ldt(int y, int mo, int d, int h, int min) {
+        return LocalDateTime.of(y, mo, d, h, min);
+    }
+
+    @SuppressWarnings("deprecation")
+    private Date date(int y, int mo, int d) {
+        return new Date(y - 1900, mo - 1, d);
+    }
+}

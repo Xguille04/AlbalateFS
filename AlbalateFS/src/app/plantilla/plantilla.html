@@ -1,0 +1,69 @@
+﻿<div class="min-h-screen bg-[#0f1923] font-sans">
+
+  <!-- Cabecera de sección -->
+  <div class="bg-[#0a1219] border-b border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <a routerLink="/" class="inline-flex items-center gap-2 text-gray-500 hover:text-amber-500 text-sm font-semibold uppercase tracking-wider transition-colors mb-6">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Volver
+      </a>
+      <div class="flex items-end gap-4">
+        <div class="w-1 h-10 bg-amber-500 shrink-0"></div>
+        <div>
+          <p class="text-amber-500 text-[11px] font-bold uppercase tracking-[0.25em] mb-1">Temporada 2025/2026</p>
+          <h1 class="text-3xl md:text-4xl font-black text-white uppercase tracking-tight">Plantilla</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado de carga -->
+  <div *ngIf="isLoading" class="max-w-7xl mx-auto flex justify-center py-20">
+    <svg class="animate-spin h-10 w-10 text-amber-500" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+    </svg>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-red-900/20 border border-red-800 p-6 text-center">
+      <p class="text-red-400 font-semibold">{{ errorMessage }}</p>
+    </div>
+  </div>
+
+  <!-- Cuadrícula de jugadores -->
+  <div *ngIf="!isLoading && !errorMessage" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+
+      <article *ngFor="let jugador of jugadores"
+               class="bg-[#1a2635] border border-gray-700 hover:border-amber-500 transition-colors group overflow-hidden flex flex-col">
+
+        <!-- Foto jugador -->
+        <div class="relative overflow-hidden bg-gray-950" style="aspect-ratio: 3/4;">
+          <!-- Dorsal: cuadrado arriba izquierda -->
+          <div class="absolute top-0 left-0 bg-amber-500 text-gray-900 font-black text-lg w-9 h-9 flex items-center justify-center z-20 leading-none">
+            {{ jugador.dorsal }}
+          </div>
+          <img
+            [src]="jugador.fotoUrl || 'https://placehold.co/300x400/111827/6b7280?text=' + jugador.dorsal"
+            [alt]="jugador.nombre + ' ' + jugador.apellidos"
+            class="w-full h-full object-cover object-top group-hover:scale-103 transition-transform duration-500"
+            onerror="this.src='https://placehold.co/300x400/111827/6b7280?text=J'"
+          >
+          <!-- Gradiente sutil en la base -->
+          <div class="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#1a2635] to-transparent"></div>
+        </div>
+
+        <!-- Info jugador -->
+        <div class="px-3 py-3 flex-1 flex flex-col">
+          <p class="text-white font-black text-sm leading-tight truncate">{{ jugador.nombre }} {{ jugador.apellidos }}</p>
+          <span class="mt-1 text-amber-500 text-[10px] font-bold uppercase tracking-wider">{{ jugador.posicion }}</span>
+        </div>
+
+      </article>
+
+    </div>
+  </div>
+
+</div>

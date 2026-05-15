@@ -1,0 +1,257 @@
+﻿<div class="min-h-screen flex font-sans">
+
+  <!-- â•â• PANEL IZQUIERDO: identidad del club â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  <div class="hidden lg:flex flex-col justify-between bg-[#0f1923] border-r-2 border-amber-500 w-[45%] shrink-0 p-12">
+
+    <!-- Volver -->
+    <a routerLink="/" class="inline-flex items-center gap-2 text-gray-500 hover:text-amber-500 text-sm font-semibold uppercase tracking-wider transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+      </svg>
+      Volver
+    </a>
+
+    <!-- Bloque central -->
+    <div class="flex flex-col items-start gap-6">
+      <img src="assets/escudo-albalate.png" alt="Escudo Albalate FS" class="w-24 h-24 object-contain">
+      <div>
+        <h1 class="text-5xl font-black text-white uppercase leading-none tracking-tighter">Albalate</h1>
+        <h1 class="text-5xl font-black text-amber-500 uppercase leading-none tracking-tighter">FS</h1>
+      </div>
+      <div class="w-12 h-0.5 bg-amber-500"></div>
+      <p class="text-gray-400 text-sm font-medium leading-relaxed max-w-xs">
+        Unete a la familia del Albalate FS. Con tu cuota de socio apoyas directamente al club y disfrutas de beneficios exclusivos.
+      </p>
+      <!-- Beneficios -->
+      <ul class="space-y-3 mt-2">
+        <li class="flex items-center gap-3 text-gray-400 text-sm">
+          <div class="w-1.5 h-1.5 bg-amber-500 shrink-0"></div>
+          Acceso preferente a partidos en casa
+        </li>
+        <li class="flex items-center gap-3 text-gray-400 text-sm">
+          <div class="w-1.5 h-1.5 bg-amber-500 shrink-0"></div>
+          Carnet digital de socio
+        </li>
+        <li class="flex items-center gap-3 text-gray-400 text-sm">
+          <div class="w-1.5 h-1.5 bg-amber-500 shrink-0"></div>
+          Descuentos en la tienda oficial
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="text-gray-700 text-xs uppercase tracking-wider font-bold">Cuota anual · Temporada 2025/2026</p>
+    </div>
+  </div>
+
+  <!-- â•â• PANEL DERECHO: formulario â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  <div class="flex-1 flex flex-col justify-center items-center bg-white px-6 py-12 overflow-y-auto">
+
+    <!-- Volver mÃ³vil -->
+    <a routerLink="/" class="lg:hidden self-start mb-8 inline-flex items-center gap-2 text-gray-500 hover:text-blue-800 text-sm font-semibold uppercase tracking-wider transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+      </svg>
+      Volver
+    </a>
+
+    <div class="w-full max-w-lg">
+
+      <!-- â•â• PASO: CONFIRMACIÃ“N â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+      <div *ngIf="step === 'confirmacion'" class="text-center py-8">
+        <div class="w-20 h-20 bg-green-50 border-2 border-green-500 flex items-center justify-center mx-auto mb-6">
+          <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <p class="text-amber-600 text-[11px] font-black uppercase tracking-[0.25em] mb-2">Alta completada</p>
+        <h2 class="text-3xl font-black text-gray-900 uppercase tracking-tight leading-none mb-4">¡Ya eres socio!</h2>
+        <p class="text-gray-500 mb-2">¡Bienvenido a la familia del Albalate FS!</p>
+        <p class="text-gray-500 mb-2">Tu número de socio es:
+          <span class="text-amber-600 font-black text-xl font-mono">{{ idSolicitud }}</span>
+        </p>
+        <p class="text-gray-400 text-sm mb-8">Te hemos enviado un email con tu <strong class="text-gray-600">carnet de socio en PDF</strong>.</p>
+        <a routerLink="/"
+          class="inline-block bg-[#0f1923] text-white font-black py-3 px-8 uppercase tracking-wider text-sm hover:bg-blue-900 transition-colors border-b-2 border-amber-500">
+          Volver a la portada
+        </a>
+      </div>
+
+      <!-- â•â• INDICADOR DE PASOS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+      <div *ngIf="step !== 'confirmacion'" class="flex items-center gap-3 mb-8">
+        <!-- Paso 1 -->
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 flex items-center justify-center text-xs font-black transition-all border-2"
+               [ngClass]="step === 'datos' ? 'bg-[#0f1923] text-white border-[#0f1923]' : 'bg-amber-500 text-gray-900 border-amber-500'">
+            <svg *ngIf="step !== 'datos'" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span *ngIf="step === 'datos'">1</span>
+          </div>
+          <span class="text-xs font-black uppercase tracking-wider"
+                [ngClass]="step === 'datos' ? 'text-gray-900' : 'text-amber-600'">Tus datos</span>
+        </div>
+        <div class="flex-1 h-px bg-gray-200"></div>
+        <!-- Paso 2 -->
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 flex items-center justify-center text-xs font-black transition-all border-2"
+               [ngClass]="step === 'pago' ? 'bg-[#0f1923] text-white border-[#0f1923]' : 'bg-white text-gray-400 border-gray-300'">
+            2
+          </div>
+          <span class="text-xs font-black uppercase tracking-wider"
+                [ngClass]="step === 'pago' ? 'text-gray-900' : 'text-gray-400'">Pago</span>
+        </div>
+      </div>
+
+      <!-- â•â• PASO 1: DATOS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+      <div *ngIf="step === 'datos'">
+        <div class="mb-8">
+          <p class="text-amber-600 text-[11px] font-black uppercase tracking-[0.25em] mb-2">Solicitud de alta · {{ CUOTA_EUR }}€/año</p>
+          <h2 class="text-3xl font-black text-gray-900 uppercase tracking-tight leading-none">Hazte Socio</h2>
+        </div>
+
+        <form [formGroup]="socioForm" (ngSubmit)="irAPago()" class="space-y-5">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label class="block text-xs font-black text-gray-700 uppercase tracking-wider mb-2">Nombre</label>
+              <input type="text" formControlName="nombre"
+                class="w-full px-4 py-3 bg-white border border-gray-300 text-gray-900 text-sm focus:outline-none focus:border-blue-800 focus:ring-1 focus:ring-blue-800 transition-colors placeholder-gray-400"
+                placeholder="Juan">
+            </div>
+            <div>
+              <label class="block text-xs font-black text-gray-700 uppercase tracking-wider mb-2">Apellidos</label>
+              <input type="text" formControlName="apellidos"
+                class="w-full px-4 py-3 bg-white border border-gray-300 text-gray-900 text-sm focus:outline-none focus:border-blue-800 focus:ring-1 focus:ring-blue-800 transition-colors placeholder-gray-400"
+                placeholder="Pérez García">
+            </div>
+            <div>
+              <label class="block text-xs font-black text-gray-700 uppercase tracking-wider mb-2">DNI / NIE</label>
+              <input type="text" formControlName="dni"
+                class="w-full px-4 py-3 bg-white border border-gray-300 text-gray-900 text-sm focus:outline-none focus:border-blue-800 focus:ring-1 focus:ring-blue-800 transition-colors placeholder-gray-400"
+                placeholder="12345678X">
+            </div>
+            <div>
+              <label class="block text-xs font-black text-gray-700 uppercase tracking-wider mb-2">Teléfono</label>
+              <input type="tel" formControlName="telefono"
+                class="w-full px-4 py-3 bg-white border border-gray-300 text-gray-900 text-sm focus:outline-none focus:border-blue-800 focus:ring-1 focus:ring-blue-800 transition-colors placeholder-gray-400"
+                placeholder="600 000 000">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-black text-gray-700 uppercase tracking-wider mb-2">Correo electrónico</label>
+            <input type="email" formControlName="email"
+              class="w-full px-4 py-3 bg-white border border-gray-300 text-gray-900 text-sm focus:outline-none focus:border-blue-800 focus:ring-1 focus:ring-blue-800 transition-colors placeholder-gray-400"
+              placeholder="correo@ejemplo.com">
+          </div>
+
+          <!-- Checkbox privacidad -->
+          <div class="flex items-start gap-3 p-4 bg-gray-50 border border-gray-200">
+            <input id="privacidad" type="checkbox" formControlName="privacidad"
+              class="mt-0.5 w-4 h-4 border-gray-300 text-blue-800 focus:ring-blue-800 cursor-pointer shrink-0">
+            <label for="privacidad" class="text-sm text-gray-600 cursor-pointer leading-relaxed">
+              Acepto la <a href="#" class="text-blue-800 font-semibold hover:underline">política de privacidad</a> y el tratamiento de mis datos personales según el RGPD.
+            </label>
+          </div>
+
+          <!-- Error -->
+          <div *ngIf="errorMessage" class="bg-red-50 border-l-4 border-red-500 p-4 flex items-center gap-3">
+            <svg class="w-4 h-4 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <p class="text-red-600 text-sm font-semibold">{{ errorMessage }}</p>
+          </div>
+
+          <button type="submit" [disabled]="socioForm.invalid || isLoading"
+            class="w-full bg-[#0f1923] text-white font-black text-sm py-4 px-4 uppercase tracking-wider hover:bg-blue-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 border-b-2 border-amber-500">
+            <svg *ngIf="isLoading" class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+            {{ isLoading ? 'Preparando pago...' : 'Continuar al pago →' }}
+          </button>
+        </form>
+      </div>
+
+      <!-- â•â• PASO 2: PAGO â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+      <div *ngIf="step === 'pago'">
+        <div class="mb-8">
+          <p class="text-amber-600 text-[11px] font-black uppercase tracking-[0.25em] mb-2">Temporada 2025/2026</p>
+          <h2 class="text-3xl font-black text-gray-900 uppercase tracking-tight leading-none">Pago de la cuota</h2>
+        </div>
+
+        <!-- Resumen del socio -->
+        <div class="border border-gray-200 border-l-4 border-l-amber-500 p-4 mb-6 text-sm text-gray-700">
+          <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-3">Resumen de la solicitud</p>
+          <div class="grid grid-cols-2 gap-y-2">
+            <span class="text-gray-400 font-semibold">Nombre</span>
+            <span class="font-bold text-gray-900">{{ socioForm.get('nombre')?.value }} {{ socioForm.get('apellidos')?.value }}</span>
+            <span class="text-gray-400 font-semibold">DNI</span>
+            <span class="font-bold text-gray-900">{{ socioForm.get('dni')?.value }}</span>
+            <span class="text-gray-400 font-semibold">Email</span>
+            <span class="font-bold text-gray-900 truncate">{{ socioForm.get('email')?.value }}</span>
+            <span class="text-gray-400 font-semibold">Importe</span>
+            <span class="font-black text-amber-600">{{ CUOTA_EUR }}€</span>
+          </div>
+        </div>
+
+        <!-- Stripe Payment Element -->
+        <div class="bg-white border border-gray-200 p-4 mb-4 min-h-[140px] relative">
+          <div id="stripe-payment-element"></div>
+          <div *ngIf="!stripeReady && !stripeError" class="absolute inset-0 flex items-center justify-center">
+            <svg class="animate-spin h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Nota tarjetas de prueba -->
+        <div class="bg-blue-50 border-l-4 border-blue-600 p-3 mb-5 text-xs text-blue-700">
+          <span class="font-bold">Modo prueba:</span> usa la tarjeta
+          <span class="font-mono bg-blue-100 px-1">4242 4242 4242 4242</span>,
+          fecha futura, CVC cualquiera.
+        </div>
+
+        <!-- Errores -->
+        <div *ngIf="stripeError" class="mb-4 bg-red-50 border-l-4 border-red-500 p-4 flex items-center gap-3">
+          <svg class="w-4 h-4 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <p class="text-red-600 text-sm font-semibold">{{ stripeError }}</p>
+        </div>
+        <div *ngIf="errorMessage" class="mb-4 bg-red-50 border-l-4 border-red-500 p-4 flex items-center gap-3">
+          <svg class="w-4 h-4 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <p class="text-red-600 text-sm font-semibold">{{ errorMessage }}</p>
+        </div>
+
+        <div class="flex gap-3">
+          <button (click)="volverADatos()" [disabled]="isLoading"
+            class="flex-1 py-3 bg-white border border-gray-300 text-gray-700 font-bold text-sm uppercase tracking-wider hover:bg-gray-50 transition-colors disabled:opacity-50">
+            ← Volver
+          </button>
+          <button (click)="confirmarPago()" [disabled]="!stripeReady || isLoading"
+            class="flex-1 bg-[#0f1923] text-white font-black text-sm py-3 px-6 uppercase tracking-wider hover:bg-blue-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 border-b-2 border-amber-500">
+            <svg *ngIf="isLoading" class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+            {{ isLoading ? 'Procesando...' : 'Pagar ' + CUOTA_EUR + '€' }}
+          </button>
+        </div>
+
+        <!-- Seguridad -->
+        <div class="flex items-center justify-center gap-2 mt-5 text-gray-400 text-xs">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+          </svg>
+          Pago seguro con Stripe · Tus datos están cifrados
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+

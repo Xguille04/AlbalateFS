@@ -1,0 +1,15 @@
+# VS Code
+.vscode/
+
+# Backend Spring Boot
+backend-spring/target/
+backend-spring/.mvn/
+backend-spring/mvnw
+backend-spring/mvnw.cmd
+*.jar
+*.war
+
+# Frontend Angular (Node)
+AlbalateFS/node_modules/
+AlbalateFS/dist/
+AlbalateFS/.angular/

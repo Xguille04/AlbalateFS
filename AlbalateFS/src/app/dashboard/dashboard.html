@@ -1,0 +1,149 @@
+﻿<div class="min-h-screen bg-[#f0f2f5] font-sans">
+
+  <!-- ══════════ BARRA SUPERIOR ══════════ -->
+  <header class="bg-[#0f1923] border-b-2 border-amber-500">
+    <div class="bg-amber-500 h-1"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+
+      <!-- Identidad + jugador -->
+      <div class="flex items-center gap-4">
+        <div class="relative shrink-0">
+          <img
+            [src]="jugador.fotoUrl || 'assets/jugadores/placeholder.png'"
+            [alt]="jugador.nombre"
+            class="w-14 h-14 object-cover object-top bg-gray-800 border border-gray-700"
+            (error)="$any($event.target).src='https://placehold.co/56x56/111827/6b7280?text=' + (jugador.nombre[0] || 'J')"
+          >
+          <!-- Dorsal como cuadrado, no círculo -->
+          <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-amber-500 flex items-center justify-center text-gray-900 font-black text-[11px] leading-none">
+            {{ jugador.dorsal }}
+          </div>
+        </div>
+        <div>
+          <p class="text-amber-500 text-[10px] font-black uppercase tracking-[0.25em]">Área privada · Jugador</p>
+          <h1 class="text-white font-black text-lg uppercase leading-tight">{{ jugador.nombre }} {{ jugador.apellidos }}</h1>
+          <p class="text-gray-400 text-xs font-semibold uppercase tracking-wider">{{ jugador.posicion }} · Temporada {{ jugador.temporada }}</p>
+        </div>
+      </div>
+
+      <!-- Cerrar sesión -->
+      <button (click)="cerrarSesion()" class="flex items-center gap-2 text-gray-500 hover:text-red-400 text-sm font-bold transition-colors cursor-pointer">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+        Salir
+      </button>
+    </div>
+  </header>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- ══════════ TARJETAS DE DATOS DEL JUGADOR ══════════ -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+
+      <div class="bg-white border-l-4 border-amber-500 border border-gray-200 px-5 py-4">
+        <p class="text-[11px] font-black text-gray-400 uppercase tracking-wider mb-2">Pierna dominante</p>
+        <p class="text-gray-900 font-black text-lg">{{ jugador.piernasDominante || '—' }}</p>
+      </div>
+
+      <div class="bg-white border-l-4 border-blue-800 border border-gray-200 px-5 py-4">
+        <p class="text-[11px] font-black text-gray-400 uppercase tracking-wider mb-2">Edad</p>
+        <p class="text-gray-900 font-black text-lg">{{ getEdad() }} <span class="text-gray-400 text-sm font-semibold">años</span></p>
+      </div>
+
+      <div class="bg-white border-l-4 border-gray-400 border border-gray-200 px-5 py-4">
+        <p class="text-[11px] font-black text-gray-400 uppercase tracking-wider mb-2">Temporadas en el club</p>
+        <p class="text-gray-900 font-black text-lg">{{ jugador.temporadasEnElClub || '—' }}</p>
+      </div>
+
+      <div class="bg-white border-l-4 border-amber-500 border border-gray-200 px-5 py-4">
+        <p class="text-[11px] font-black text-gray-400 uppercase tracking-wider mb-2">Próximo entreno</p>
+        <p class="text-gray-900 font-bold text-sm leading-tight">{{ jugador.proximoEntreno }}</p>
+      </div>
+
+    </div>
+
+    <!-- ══════════ ESTADÍSTICAS DE TEMPORADA ══════════ -->
+    <div class="mb-8">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-1 h-6 bg-amber-500"></div>
+        <h2 class="text-sm font-black text-gray-900 uppercase tracking-wider">Estadísticas de temporada</h2>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+
+        <div class="bg-white border border-gray-200 px-5 py-5">
+          <p class="text-[11px] font-black text-gray-400 uppercase tracking-wider mb-3">Goles</p>
+          <span class="text-6xl font-black text-gray-900 tabular-nums">{{ estadisticas.goles }}</span>
+        </div>
+
+        <div class="bg-white border border-gray-200 px-5 py-5">
+          <p class="text-[11px] font-black text-gray-400 uppercase tracking-wider mb-3">Asistencias</p>
+          <span class="text-6xl font-black text-blue-900 tabular-nums">{{ estadisticas.asistencias }}</span>
+        </div>
+
+        <div class="bg-white border border-gray-200 px-5 py-5">
+          <p class="text-[11px] font-black text-gray-400 uppercase tracking-wider mb-3">Minutos</p>
+          <span class="text-6xl font-black text-gray-700 tabular-nums">{{ estadisticas.minutos }}</span>
+        </div>
+
+        <div class="bg-[#0f1923] border border-gray-700 px-5 py-5">
+          <p class="text-[11px] font-black text-gray-400 uppercase tracking-wider mb-3">Calificación</p>
+          <span class="text-6xl font-black text-amber-500 tabular-nums">{{ estadisticas.calificacion }}</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════ GRID: VÍDEOS + ALERTAS ══════════ -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Vídeos (2/3) -->
+      <div class="lg:col-span-2 bg-white border border-gray-200">
+        <div class="bg-[#0f1923] px-5 py-3 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-1 h-5 bg-amber-500"></div>
+            <h2 class="text-sm font-black text-white uppercase tracking-wider">Correcciones de vídeo</h2>
+          </div>
+          <button class="text-gray-500 hover:text-amber-400 text-xs font-bold uppercase tracking-wider transition-colors">Ver todos</button>
+        </div>
+
+        <div class="divide-y divide-gray-100">
+          <p *ngIf="correccionesVideo.length === 0 && !isLoading"
+             class="text-sm text-gray-400 text-center py-10 font-semibold">
+            No hay vídeos asignados por el entrenador.
+          </p>
+          <a *ngFor="let video of correccionesVideo"
+             [href]="video.url" target="_blank" rel="noopener noreferrer"
+             class="group flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors cursor-pointer">
+            <div class="w-12 h-10 bg-[#0f1923] border border-gray-700 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-gray-900 font-bold text-sm group-hover:text-blue-800 transition-colors truncate">{{ video.descripcion }}</p>
+              <p class="text-gray-400 text-xs mt-0.5">{{ video.fecha | date:'dd/MM/yyyy' }}</p>
+            </div>
+            <svg class="w-4 h-4 text-gray-400 group-hover:text-blue-800 shrink-0 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Alertas (1/3) -->
+      <div class="bg-[#0f1923] border border-gray-700">
+        <div class="px-5 py-3 border-b border-gray-800 flex items-center gap-3">
+          <div class="w-1 h-5 bg-amber-500"></div>
+          <h2 class="text-sm font-black text-white uppercase tracking-wider">Alertas</h2>
+        </div>
+
+        <div class="divide-y divide-gray-800">
+          <div *ngFor="let notif of notificaciones"
+               class="px-5 py-4 border-l-2"
+               [ngClass]="notif.tipo === 'info' ? 'border-l-blue-500' : 'border-l-amber-500'">
+            <p class="text-sm font-bold text-gray-100">{{ notif.titulo }}</p>
+            <p class="text-sm text-gray-400 mt-1 leading-relaxed">{{ notif.mensaje }}</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
