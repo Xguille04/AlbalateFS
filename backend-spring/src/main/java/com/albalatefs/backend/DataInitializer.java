@@ -22,6 +22,7 @@ public class DataInitializer implements CommandLineRunner {
     private final EstadisticaJugadorRepository estadisticaRepo;
     private final VideoTacticoRepository videoRepo;
     private final ProductoRepository productoRepo;
+    private final FavoritoRepository favoritoRepo;
     private final PasswordEncoder passwordEncoder;
 
     public DataInitializer(UsuarioRepository usuarioRepo,
@@ -32,6 +33,7 @@ public class DataInitializer implements CommandLineRunner {
                            EstadisticaJugadorRepository estadisticaRepo,
                            VideoTacticoRepository videoRepo,
                            ProductoRepository productoRepo,
+                           FavoritoRepository favoritoRepo,
                            PasswordEncoder passwordEncoder) {
         this.usuarioRepo = usuarioRepo;
         this.jugadorRepo = jugadorRepo;
@@ -41,6 +43,7 @@ public class DataInitializer implements CommandLineRunner {
         this.estadisticaRepo = estadisticaRepo;
         this.videoRepo = videoRepo;
         this.productoRepo = productoRepo;
+        this.favoritoRepo = favoritoRepo;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -66,12 +69,14 @@ public class DataInitializer implements CommandLineRunner {
                 }
                 return;
             }
-            // Limpiar datos antiguos para re-sembrar
+            // Limpiar datos antiguos para re-sembrar (orden respetando FK constraints)
             estadisticaRepo.deleteAll();
+            favoritoRepo.deleteAll();   // FK → usuarios, productos
             videoRepo.deleteAll();
             socioRepo.deleteAll();
             noticiaRepo.deleteAll();
-            jugadorRepo.deleteAll();
+            productoRepo.deleteAll();   // FK ← favoritos (ya borrado)
+            jugadorRepo.deleteAll();    // FK → usuarios
             partidoRepo.deleteAll();
             usuarioRepo.deleteAll();
         }
