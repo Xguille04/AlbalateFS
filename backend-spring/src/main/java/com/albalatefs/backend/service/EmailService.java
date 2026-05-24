@@ -1,4 +1,4 @@
-﻿package com.albalatefs.backend.service;
+package com.albalatefs.backend.service;
 
 import com.albalatefs.backend.model.Socio;
 import com.albalatefs.backend.payload.PedidoRequest;
