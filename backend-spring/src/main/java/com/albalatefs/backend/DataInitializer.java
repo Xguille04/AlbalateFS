@@ -53,8 +53,13 @@ public class DataInitializer implements CommandLineRunner {
             boolean tieneRolEntrenador = usuarioRepo.findByEmail("edu@albalatefs.com")
                 .map(u -> "ENTRENADOR".equals(u.getRol()))
                 .orElse(false);
+            // Verificar que las contraseñas están codificadas con BCrypt (empiezan por $2)
+            // Si se migraron como texto plano el login fallará con "Bad credentials"
+            boolean tienePasswordBcrypt = usuarioRepo.findByEmail("edu@albalatefs.com")
+                .map(u -> u.getPassword() != null && u.getPassword().startsWith("$2"))
+                .orElse(false);
 
-            if (tieneNuevosCampos && tieneRolEntrenador) {
+            if (tieneNuevosCampos && tieneRolEntrenador && tienePasswordBcrypt) {
                 // Usuarios/jugadores OK → solo seedear productos si faltan
                 if (productoRepo.count() == 0) {
                     seedProductos();
