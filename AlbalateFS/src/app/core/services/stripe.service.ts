@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 declare var Stripe: any;
 
 @Injectable({ providedIn: 'root' })
 export class StripeService {
-  private readonly apiUrl = 'http://localhost:8080/api/stripe';
+  private readonly apiUrl = `${environment.apiUrl}/stripe`;
   private stripeInstance: any = null;
 
   constructor(private http: HttpClient) {}
