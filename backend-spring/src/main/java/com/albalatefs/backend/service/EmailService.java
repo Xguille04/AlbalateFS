@@ -2,8 +2,11 @@ package com.albalatefs.backend.service;
 
 import com.albalatefs.backend.model.Socio;
 import com.albalatefs.backend.payload.PedidoRequest;
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.*;
+import com.lowagie.text.Document;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfWriter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
