@@ -90,11 +90,7 @@
 			<artifactId>stripe-java</artifactId>
 			<version>25.1.0</version>
 		</dependency>
-		<!-- Spring Mail (email) -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
-		</dependency>
+		<!-- No spring-boot-starter-mail: email enviado via Brevo HTTP API -->
 		<!-- OpenPDF (PDF generation) -->
 		<dependency>
 			<groupId>com.github.librepdf</groupId>

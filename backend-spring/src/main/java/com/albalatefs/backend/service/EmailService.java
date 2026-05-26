@@ -4,33 +4,66 @@ import com.albalatefs.backend.model.Socio;
 import com.albalatefs.backend.payload.PedidoRequest;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.util.ByteArrayDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    @Value("${brevo.api.key:}")
+    private String brevoApiKey;
+
+    @Value("${mail.from.email:guilleayuda04@gmail.com}")
+    private String fromEmail;
+
+    private final RestTemplate restTemplate = new RestTemplate();
+    private static final String BREVO_URL = "https://api.brevo.com/v3/smtp/email";
+
+    private void sendEmail(String to, String subject, String html,
+                           byte[] attachmentBytes, String attachmentFilename) {
+        try {
+            if (brevoApiKey == null || brevoApiKey.isBlank()) {
+                System.err.println("[EMAIL] BREVO_API_KEY no configurada — email a " + to + " no enviado.");
+                return;
+            }
+
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("sender", Map.of("name", "Albalate FS", "email", fromEmail));
+            body.put("to", List.of(Map.of("email", to)));
+            body.put("subject", subject);
+            body.put("htmlContent", html);
+
+            if (attachmentBytes != null && attachmentFilename != null) {
+                body.put("attachment", List.of(Map.of(
+                        "content", Base64.getEncoder().encodeToString(attachmentBytes),
+                        "name", attachmentFilename
+                )));
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("api-key", brevoApiKey);
+
+            ResponseEntity<Map> response = restTemplate.postForEntity(
+                    BREVO_URL, new HttpEntity<>(body, headers), Map.class);
+
+            System.out.println("[EMAIL] Enviado a " + to + " — status: " + response.getStatusCode());
+        } catch (Exception e) {
+            System.err.println("[EMAIL ERROR] Error enviando email a " + to + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     public void enviarConfirmacionSocio(Socio socio) {
         try {
             byte[] pdfBytes = generarCarnetPdf(socio);
-
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-            helper.setFrom("guilleayuda04@gmail.com", "Albalate FS");
-            helper.setTo(socio.getEmail());
-            helper.setSubject("¡Bienvenido al Albalate FS! Tu carnet de socio");
 
             String numeroSocio = String.format("ALB-%04d", socio.getId());
             String fechaAlta = socio.getFechaAlta() != null
@@ -86,13 +119,13 @@ public class EmailService {
                             socio.getDni(), fechaAlta,
                             socio.getEmail(), socio.getDni());
 
-            helper.setText(html, true);
-            helper.addAttachment("carnet-socio-" + numeroSocio + ".pdf",
-                    new ByteArrayDataSource(pdfBytes, "application/pdf"));
-
-            mailSender.send(message);
+            sendEmail(socio.getEmail(),
+                    "¡Bienvenido al Albalate FS! Tu carnet de socio",
+                    html,
+                    pdfBytes,
+                    "carnet-socio-" + numeroSocio + ".pdf");
         } catch (Exception e) {
-            System.err.println("[EMAIL ERROR] Error enviando email de confirmación a " + socio.getEmail() + ": " + e.getMessage());
+            System.err.println("[EMAIL ERROR] Error preparando email de socio " + socio.getEmail() + ": " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -163,13 +196,6 @@ public class EmailService {
                                          java.util.List<PedidoRequest.ItemCarrito> items,
                                          double totalEur) {
         try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-            helper.setFrom("guilleayuda04@gmail.com", "Albalate FS");
-            helper.setTo(email);
-            helper.setSubject("¡Pedido confirmado! - Albalate FS Tienda");
-
             String numeroPedido = "PED-" + (System.currentTimeMillis() % 1_000_000L);
             String fecha = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date());
 
@@ -229,10 +255,9 @@ public class EmailService {
                     </html>
                     """.formatted(nombre, numeroPedido, fecha, itemsHtml.toString(), totalEur);
 
-            helper.setText(html, true);
-            mailSender.send(message);
+            sendEmail(email, "¡Pedido confirmado! - Albalate FS Tienda", html, null, null);
         } catch (Exception e) {
-            System.err.println("[EMAIL ERROR] Error enviando email de pedido a " + email + ": " + e.getMessage());
+            System.err.println("[EMAIL ERROR] Error preparando email de pedido a " + email + ": " + e.getMessage());
             e.printStackTrace();
         }
     }
