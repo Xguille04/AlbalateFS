@@ -92,7 +92,8 @@ public class EmailService {
 
             mailSender.send(message);
         } catch (Exception e) {
-            System.err.println("Error enviando email de confirmación: " + e.getMessage());
+            System.err.println("[EMAIL ERROR] Error enviando email de confirmación a " + socio.getEmail() + ": " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -231,7 +232,8 @@ public class EmailService {
             helper.setText(html, true);
             mailSender.send(message);
         } catch (Exception e) {
-            System.err.println("Error enviando email confirmación pedido: " + e.getMessage());
+            System.err.println("[EMAIL ERROR] Error enviando email de pedido a " + email + ": " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
