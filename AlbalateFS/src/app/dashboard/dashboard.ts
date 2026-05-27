@@ -6,7 +6,8 @@ import { JugadorService, Jugador } from '../core/services/jugador.service';
 import { EstadisticaService } from '../core/services/estadistica.service';
 import { VideoService, VideoTactico } from '../core/services/video.service';
 import { AlertaService, AlertaJugador } from '../core/services/alerta.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -79,7 +80,7 @@ export class DashboardComponent implements OnInit {
         forkJoin({
           stats: this.estadisticaService.getByJugador(jugador.id),
           videos: this.videoService.getAll(),
-          alertas: this.alertaService.getMisAlertas(jugador.id)
+          alertas: this.alertaService.getMisAlertas(jugador.id).pipe(catchError(() => of([])))
         }).subscribe({
           next: ({ stats, videos, alertas }) => {
             this.estadisticas.goles = stats.reduce((s, e) => s + e.goles, 0);

@@ -13,15 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/alertas")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.PATCH, RequestMethod.OPTIONS})
 public class AlertaController {
 
     @Autowired
@@ -41,6 +41,7 @@ public class AlertaController {
      * Body: { "mensaje": "...", "jugadorIds": [1, 2] }  (jugadorIds vacío/null = todos)
      */
     @PostMapping
+    @Transactional
     @PreAuthorize("hasRole('ENTRENADOR')")
     public ResponseEntity<Alerta> crearAlerta(
             @RequestBody AlertaRequest req,
@@ -64,11 +65,12 @@ public class AlertaController {
         alertaRepository.save(alerta);
 
         // Determinar destinatarios
+        // Se filtra por posicion para evitar problemas de carga lazy en el campo usuario
         List<Jugador> destinatarios;
         if (req.getJugadorIds() == null || req.getJugadorIds().isEmpty()) {
             destinatarios = jugadorRepository.findAll()
                     .stream()
-                    .filter(j -> j.getUsuario() != null && !"ENTRENADOR".equals(j.getUsuario().getRol()))
+                    .filter(j -> !"Entrenador".equals(j.getPosicion()))
                     .toList();
         } else {
             destinatarios = jugadorRepository.findAllById(req.getJugadorIds());
