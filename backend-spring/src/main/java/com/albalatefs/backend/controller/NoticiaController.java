@@ -32,4 +32,24 @@ public class NoticiaController {
     public Noticia createNoticia(@RequestBody Noticia noticia) {
         return noticiaRepository.save(noticia);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Noticia> updateNoticia(@PathVariable Long id, @RequestBody Noticia body) {
+        return noticiaRepository.findById(id).map(n -> {
+            n.setTitulo(body.getTitulo());
+            n.setResumen(body.getResumen());
+            n.setContenido(body.getContenido());
+            n.setEtiqueta(body.getEtiqueta());
+            n.setImagenUrl(body.getImagenUrl());
+            n.setFechaPublicacion(body.getFechaPublicacion());
+            return ResponseEntity.ok(noticiaRepository.save(n));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteNoticia(@PathVariable Long id) {
+        if (!noticiaRepository.existsById(id)) return ResponseEntity.notFound().build();
+        noticiaRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }

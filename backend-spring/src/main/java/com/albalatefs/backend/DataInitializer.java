@@ -153,46 +153,46 @@ public class DataInitializer implements CommandLineRunner {
 
         // ── NOTICIAS ────────────────────────────────────────────────────────
         noticiaRepo.save(new Noticia(null,
-            "Gran victoria ante el CD Andorra: 5-2 en casa",
-            "El Albalate FS arranca la temporada con pie derecho ante la afición.",
-            "El equipo mostró una gran solidez defensiva y una eficacia goleadora que augura una gran temporada. Carlos y Edu fueron los protagonistas con un doblete cada uno, mientras que Anas cerró la cuenta desde el extremo. La afición llenó el pabellón y vivió noventa minutos de fútbol sala de alta intensidad.",
-            ldt(2026, 1, 11, 10, 0), "Crónica", null));
+            "Primera toma de contacto de Albalate con el fútbol sala antes de la presentación oficial",
+            "El próximo 14 de septiembre, en las jornadas por la inclusión se jugará un partido a modo de puesta de largo oficial del equipo. Este sábado, jugadores y directiva caldearon el ambiente en las prefiestas",
+            "Para caldear el ambiente y hacer una primera toma de contacto con la afición, el sábado se planteó un partido entre jugadores y directiva que acabó por decantarse del lado de los segundos por 2 goles a 3.",
+            ldt(2026, 1, 11, 10, 0), "Crónica", "assets/noticias/albalate-pretemporada-albalate-futbol-sala-directiva.jpg"));
 
         noticiaRepo.save(new Noticia(null,
-            "Remontada épica en Caspe: 1-4 lejos de casa",
-            "El equipo remontó un 1-0 en el descanso con una segunda parte brillante.",
-            "Nadie esperaba el inicio que tuvo el partido. Caspe se puso por delante a los 8 minutos, pero el Albalate FS respondió con carácter. Rodrigo igualó antes del descanso y en la segunda mitad el equipo fue imparable. Guille, Carlos y Tono marcaron para sellar una victoria histórica fuera de casa.",
-            ldt(2026, 1, 18, 9, 30), "Crónica", null));
+            "Albalate saca pecho de su cantera en fútbol sala femenino y disputa la fase final del campeonato de Aragón",
+            "El equipo infantil femenino, entrenado por Dani Bernad, terminó cuarto en el autonómico",
+            "El trabajo de la cantera del fútbol sala femenino en Albalate del Arzobispo ya recoge sus frutos. El equipo infantil femenino, entrenado por el local Dani Bernad, logró el pasado fin de semana conquistar el cuarto puesto en el Campeonato de Aragón al que accedió el equipo como campeón provincial.",
+            ldt(2026, 1, 18, 9, 30), "Crónica", "assets/noticias/download.jpg"));
 
         noticiaRepo.save(new Noticia(null,
-            "El Albalate FS renueva a su portero Aitor García por dos temporadas",
+            "El Albalate FS renueva a su portero Aitor Lazaro por dos temporadas",
             "El guardameta amplía su vinculación con el club hasta 2028.",
             "Aitor García, uno de los pilares fundamentales del equipo durante las últimas campañas, ha renovado su contrato con el Albalate FS por dos temporadas más. El portero, de 27 años, ha sido clave en la solidez defensiva del equipo con una media de menos de dos goles encajados por partido. 'Estoy muy feliz aquí, es mi casa', declaró tras firmar.",
-            ldt(2026, 1, 25, 11, 0), "Club", null));
+            ldt(2026, 1, 25, 11, 0), "Club", "assets/noticias/renovacion-aitor.jpg"));
 
         noticiaRepo.save(new Noticia(null,
-            "Paliza ante el CD Belchite: 6-1 y liderato consolidado",
-            "El Albalate FS golea y se coloca líder en solitario de su grupo.",
-            "Partido para enmarcar. El CD Belchite no pudo hacer nada ante un Albalate FS arrollador. Edu fue el gran protagonista con un hat-trick, mientras que Carlos, Anas y Guille completaron la goleada. El equipo mantiene así la mejor defensa del grupo y el segundo mejor ataque.",
-            ldt(2026, 2, 8, 10, 0), "Crónica", null));
+            "Nos despedimos de nuestros jugadores!",
+            "Anunciamos las 3 primeras bajas del equipo.",
+            "Tras una temporada con nosostros nos despedimos de Sergio, Daniel y Mario, un placer compartir la pista con vosotros y os deseamos lo mejor en el futuro.",
+            ldt(2026, 2, 8, 10, 0), "Crónica", "assets/noticias/despedida.jpg"));
 
         noticiaRepo.save(new Noticia(null,
-            "El equipo trabaja en el camp físico de cara al tramo final",
-            "La plantilla intensifica los entrenamientos con un preparador físico externo.",
-            "El Albalate FS ha contratado los servicios de un preparador físico especializado en fútbol sala para el tramo final de la temporada regular. Los jugadores están realizando doble sesión los miércoles para llegar en las mejores condiciones posibles al play-off de ascenso.",
-            ldt(2026, 3, 5, 12, 0), "Club", null));
+            "Albalate se une por la inclusión social y presenta su equipo de fútbol sala junto a ATADI",
+            "Los jugadores albalatinos dan a conocer su cantera en un partido con miembros de ATADI de Andorra, Utrillas y Alcañiz. Su primer encuentro en liga será el viernes 27",
+            "Por la inclusión y demostrar \"que todos somos iguales\". Esos fueron los motivos que llevaron a Albalate del Arzobispo a realizar la presentación oficial de su equipo de fútbol sala con un partido con miembros de los centros de ATADI de Andorra, Utrillas y Alcañiz. La iniciativa, que contó con éxito de participación, fue impulsada por primera vez el pasado verano y este año se ha querido repetir por todo lo que esta puede enseñar a la población.",
+            ldt(2026, 3, 5, 12, 0), "Club", "assets/noticias/inclusion-social.jpg"));
 
         noticiaRepo.save(new Noticia(null,
-            "La peña 'Los Bomberillos' organiza una marcha solidaria en apoyo al club",
-            "Más de 150 aficionados participaron en la marcha por los montes de Albalate.",
-            "La afición del Albalate FS volvió a demostrar su compromiso con el club. La peña 'Los Bomberillos' organizó una marcha solidaria con punto de salida en el pabellón municipal. Participaron más de 150 personas y se recaudaron fondos para el desplazamiento a las fases finales.",
-            ldt(2026, 3, 22, 9, 0), "Afición", null));
+            "«Joga Bonito» se impone en las 48 horas de fútbol sala de Albalate",
+            "El torneo fue un éxito de asistencia y se vivió un gran ambiente en el pabellón durante todo el fin de semana",
+            "as 48 horas de fútbol sala de Albalate del Arzobispo llegaron a su fin este domingo por la tarde. El equipo campeón fue Joga Bonito, procedente de Barcelona, que se impuso en la final por 1-3 al Pitux Team de Híjar. Cabe destacar que los campeones cuentan en su haber con el Mejor Jugador del Torneo, Carlos Gómez, y con el Pichichi, Sergio Costa.",
+            ldt(2026, 3, 22, 9, 0), "Afición", "assets/noticias/horas.jpg"));
 
         noticiaRepo.save(new Noticia(null,
-            "Previa: Albalate FS - Quinto Futsal, duelo de aspirantes",
-            "El próximo sábado se decide quién lleva la ventaja de cara al play-off.",
-            "El partido del sábado 16 de mayo enfrenta a los dos equipos con más opciones de ascender directamente. El Albalate FS llega con tres puntos de ventaja pero con el factor campo en contra si el resultado global es desfavorable. Se espera lleno absoluto en el pabellón.",
-            ldt(2026, 5, 13, 8, 0), "Previa", null));
+            "Nueva edicion del torneo local!",
+            "El próximo sábado se decide quién se lleva el titulo local.",
+            "El partido del sábado 16 de mayo enfrenta a los dos equipos con más opciones de obtener el titulo local la peña El Vicio contra La Colapso",
+            ldt(2026, 5, 13, 8, 0), "Previa", "assets/noticias/torneo.jpg"));
 
         // ── SOCIOS ──────────────────────────────────────────────────────────
         // Datos: [email, dni]
