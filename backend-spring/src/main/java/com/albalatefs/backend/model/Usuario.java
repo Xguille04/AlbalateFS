@@ -1,5 +1,6 @@
 package com.albalatefs.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,8 +20,9 @@ public class Usuario {
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
+    @JsonIgnore
     @Column(nullable = false, length = 255)
-    private String password; // Se guardará encriptada (hash)
+    private String password;
 
     @Column(nullable = false, length = 50)
     private String rol;

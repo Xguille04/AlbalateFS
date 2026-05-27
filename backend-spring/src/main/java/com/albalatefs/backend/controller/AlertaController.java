@@ -91,6 +91,7 @@ public class AlertaController {
      * Jugador obtiene sus alertas (leídas y no leídas).
      */
     @GetMapping("/mis-alertas/{jugadorId}")
+    @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<AlertaJugador>> getMisAlertas(@PathVariable Long jugadorId) {
         List<AlertaJugador> alertas = alertaJugadorRepository.findByJugadorId(jugadorId);
@@ -101,6 +102,7 @@ public class AlertaController {
      * Jugador marca una alerta como leída.
      */
     @PatchMapping("/{alertaId}/leer/{jugadorId}")
+    @Transactional
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AlertaJugador> marcarLeida(
             @PathVariable Long alertaId,
