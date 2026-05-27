@@ -1,6 +1,5 @@
 package com.albalatefs.backend.security.jwt;
 
-import java.security.Key;
 import java.util.Date;
 
 import jakarta.servlet.http.HttpServletRequest;

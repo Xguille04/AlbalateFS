@@ -75,6 +75,8 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth
+                                // Health-check y recursos estáticos del navegador
+                                .requestMatchers("/", "/favicon.ico", "/favicon.svg", "/error").permitAll()
                                 // Autenticación: siempre público
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/api/test/**").permitAll()
