@@ -1,18 +1,69 @@
+/* ============================================================
+   HOST — previene scroll horizontal en todo el componente
+   ============================================================ */
+:host {
+  display: block;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   CARRUSEL DE RESULTADOS
+   ============================================================ */
+
 /* 1. Define el recorrido: Empieza en 0 y se desplaza hasta la mitad exacta (-50%) */
 @keyframes scroll-infinito {
-  0% { transform: translateX(0); }
+  0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 
 /* 2. Aplica el motor a la clase que pusimos en el HTML */
 .carrusel-animado {
-  /* 30 segundos de duración, velocidad lineal (sin tirones) e infinito */
+  /* 10 segundos de duración, velocidad lineal (sin tirones) e infinito */
   animation: scroll-infinito 10s linear infinite;
-  /* Opcional: Asegura que el navegador acelere la animación por hardware */
+  /* Acelera la animación por hardware */
   will-change: transform;
 }
 
-/* 3. Pausa la cinta cuando el usuario pone el cursor encima para leer los datos 
-.carrusel-animado:hover {
-  animation-play-state: paused;
-}*/
+/* Pausa cuando el usuario pone el cursor encima */
+/* .carrusel-animado:hover { animation-play-state: paused; } */
+
+/* ============================================================
+   SECCIÓN INCLUSIÓN / VALORES
+   ============================================================ */
+
+/* Contenedor que mantiene la proporción 4:3 */
+.inclusion-img-wrapper {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background-color: #e5e7eb; /* gris claro mientras carga */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* La imagen NO se recorta ni deforma:
+   - max-width/height: 100% → nunca sale del contenedor
+   - object-fit: contain   → preserva la proporción original
+   - display: block        → elimina espacio extra inline
+*/
+.inclusion-img {
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+/* ============================================================
+   RESPONSIVE — ajustes adicionales para pantallas pequeñas
+   ============================================================ */
+
+/* Móvil: asegurar que el hero no desborde */
+@media (max-width: 639px) {
+  .inclusion-img-wrapper {
+    aspect-ratio: 3 / 2;
+  }
+}
