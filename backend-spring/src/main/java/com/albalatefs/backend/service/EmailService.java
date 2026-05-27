@@ -10,6 +10,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.awt.Color;
@@ -37,6 +38,11 @@ public class EmailService {
                 return;
             }
 
+            String keyPreview = brevoApiKey.length() > 10
+                    ? brevoApiKey.substring(0, 8) + "..." + brevoApiKey.substring(brevoApiKey.length() - 4)
+                    : "(clave demasiado corta)";
+            System.out.println("[EMAIL] Intentando enviar a " + to + " | key: " + keyPreview + " | from: " + fromEmail);
+
             Map<String, Object> body = new LinkedHashMap<>();
             body.put("sender", Map.of("name", "Albalate FS", "email", fromEmail));
             body.put("to", List.of(Map.of("email", to)));
@@ -52,12 +58,18 @@ public class EmailService {
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("api-key", brevoApiKey);
+            headers.set("Accept", "application/json");
+            headers.set("api-key", brevoApiKey.trim());
 
             ResponseEntity<Map> response = restTemplate.postForEntity(
                     BREVO_URL, new HttpEntity<>(body, headers), Map.class);
 
             System.out.println("[EMAIL] Enviado a " + to + " — status: " + response.getStatusCode());
+        } catch (HttpClientErrorException e) {
+            System.err.println("[EMAIL ERROR] Error enviando email a " + to
+                    + ": " + e.getStatusCode()
+                    + " — body: " + e.getResponseBodyAsString());
+            e.printStackTrace();
         } catch (Exception e) {
             System.err.println("[EMAIL ERROR] Error enviando email a " + to + ": " + e.getMessage());
             e.printStackTrace();
