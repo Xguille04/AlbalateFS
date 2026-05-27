@@ -176,14 +176,25 @@ public class DataInitializer implements CommandLineRunner {
             ldt(2026, 5, 13, 8, 0), "Previa", null));
 
         // ── SOCIOS ──────────────────────────────────────────────────────────
-        socioRepo.save(new Socio(null, "Miguel",   "Lorente García",   "12345678A", "miguel.lorente@gmail.com",   "634111222", date(2024, 9, 1)));
-        socioRepo.save(new Socio(null, "Raquel",   "Blasco Ferrer",    "23456789B", "rblasco@hotmail.com",        "645222333", date(2024, 9, 15)));
-        socioRepo.save(new Socio(null, "Fernando", "Querol Navarro",   "34567890C", "fernando.querol@gmail.com",  "656333444", date(2024, 10, 3)));
-        socioRepo.save(new Socio(null, "Lucía",    "Moya Pérez",       "45678901D", "lucia.moya@gmail.com",       "667444555", date(2024, 10, 20)));
-        socioRepo.save(new Socio(null, "Javier",   "Ariño Estrada",    "56789012E", "jarino@outlook.com",         "678555666", date(2024, 11, 5)));
-        socioRepo.save(new Socio(null, "Elena",    "Pallarés Ibáñez",  "67890123F", "elena.pallares@gmail.com",   "689666777", date(2025, 1, 10)));
-        socioRepo.save(new Socio(null, "Tomás",    "Guillén Morte",    "78901234G", "tguillen@gmail.com",         "690777888", date(2025, 2, 14)));
-        socioRepo.save(new Socio(null, "Amparo",   "Sancho Villalba",  "89012345H", "amparo.sancho@hotmail.com",  "601888999", date(2025, 3, 1)));
+        // Datos: [email, dni]
+        Object[][] sociosData = {
+            {"miguel.lorente@gmail.com",  "12345678A", "Miguel",   "Lorente García",   "634111222", date(2024, 9, 1)},
+            {"rblasco@hotmail.com",        "23456789B", "Raquel",   "Blasco Ferrer",    "645222333", date(2024, 9, 15)},
+            {"fernando.querol@gmail.com",  "34567890C", "Fernando", "Querol Navarro",   "656333444", date(2024, 10, 3)},
+            {"lucia.moya@gmail.com",       "45678901D", "Lucía",    "Moya Pérez",       "667444555", date(2024, 10, 20)},
+            {"jarino@outlook.com",         "56789012E", "Javier",   "Ariño Estrada",    "678555666", date(2024, 11, 5)},
+            {"elena.pallares@gmail.com",   "67890123F", "Elena",    "Pallarés Ibáñez",  "689666777", date(2025, 1, 10)},
+            {"tguillen@gmail.com",         "78901234G", "Tomás",    "Guillén Morte",    "690777888", date(2025, 2, 14)},
+            {"amparo.sancho@hotmail.com",  "89012345H", "Amparo",   "Sancho Villalba",  "601888999", date(2025, 3, 1)},
+        };
+        for (Object[] d : sociosData) {
+            String email = (String) d[0];
+            String dni   = (String) d[1];
+            socioRepo.save(new Socio(null, (String) d[2], (String) d[3], dni, email, (String) d[4], (Date) d[5]));
+            if (!usuarioRepo.existsByEmail(email)) {
+                usuarioRepo.save(new Usuario(null, email, passwordEncoder.encode(dni), "SOCIO"));
+            }
+        }
 
         // ── ESTADÍSTICAS ────────────────────────────────────────────────────
         // Partidos finalizados: p1..p12
