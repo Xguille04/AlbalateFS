@@ -37,16 +37,16 @@
   <div *ngIf="!isLoading" class="flex flex-1 overflow-hidden">
 
     <!-- â”€â”€ SIDEBAR: LISTA DE JUGADORES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-    <aside class="w-72 bg-[#0a1219] border-r border-gray-800 overflow-y-auto shrink-0">
+    <aside class="w-72 bg-[#0a1219] border-r border-gray-800 flex flex-col shrink-0">
       <div class="px-4 py-3 border-b border-gray-800">
         <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em]">Plantilla</p>
         <p class="text-gray-600 text-xs mt-0.5">{{ jugadores.length }} jugadores</p>
       </div>
-      <div class="py-2">
+      <div class="py-2 flex-1 overflow-y-auto">
         <div *ngFor="let j of jugadores"
-          (click)="selectJugador(j)"
+          (click)="selectJugador(j); mainView='jugador'"
           class="flex items-center gap-3 px-4 py-4 cursor-pointer transition-colors border-l-2"
-          [ngClass]="selectedJugador?.id === j.id
+          [ngClass]="selectedJugador?.id === j.id && mainView === 'jugador'
             ? 'bg-blue-900/40 border-l-amber-500 '
             : 'border-l-transparent hover:bg-gray-800/50 hover:border-l-gray-600'">
           <div class="relative shrink-0">
@@ -69,13 +69,28 @@
           </div>
         </div>
       </div>
+
+      <!-- Botón Alertas en el sidebar -->
+      <div class="border-t border-gray-800 p-3 shrink-0">
+        <button (click)="mostrarAlertas()"
+          class="w-full flex items-center gap-3 px-4 py-3 border-l-2 transition-colors font-bold text-sm uppercase tracking-wider"
+          [ngClass]="mainView === 'alertas'
+            ? 'bg-amber-500/10 border-l-amber-500 text-amber-400'
+            : 'border-l-transparent text-gray-500 hover:bg-gray-800/50 hover:text-amber-400 hover:border-l-amber-600'">
+          <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+          </svg>
+          Alertas
+        </button>
+      </div>
     </aside>
 
     <!-- â”€â”€ ÃREA PRINCIPAL: DETALLE DEL JUGADOR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <main class="flex-1 overflow-y-auto bg-[#0f1923]">
 
       <!-- Estado vacÃ­o -->
-      <div *ngIf="!selectedJugador" class="flex flex-col items-center justify-center h-full text-gray-600">
+      <div *ngIf="!selectedJugador && mainView === 'jugador'" class="flex flex-col items-center justify-center h-full text-gray-600">
         <svg class="w-14 h-14 mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
@@ -85,7 +100,7 @@
       </div>
 
       <!-- Jugador seleccionado -->
-      <div *ngIf="selectedJugador" class="p-6">
+      <div *ngIf="selectedJugador && mainView === 'jugador'" class="p-6">
 
         <!-- Banner del jugador -->
         <div class="bg-[#0a1219] border border-gray-800 border-l-4 border-l-amber-500 p-5 mb-6 flex items-center gap-6">
@@ -438,6 +453,99 @@
         </div>
 
       </div><!-- /selectedJugador -->
+
+      <!-- ── VISTA: ALERTAS ─────────────────────────────────────────────── -->
+      <div *ngIf="mainView === 'alertas'" class="p-6">
+
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-1 h-7 bg-amber-500"></div>
+          <h2 class="text-white font-black text-lg uppercase tracking-tight">Gestión de Alertas</h2>
+        </div>
+
+        <!-- Formulario nueva alerta -->
+        <div class="bg-[#0a1219] border border-amber-500/30 p-5 mb-6">
+          <p class="text-amber-500 text-xs font-black uppercase tracking-wider mb-4">Nueva alerta</p>
+
+          <!-- Mensaje -->
+          <div class="mb-4">
+            <label class="text-gray-400 text-[10px] font-black uppercase tracking-wider block mb-1">Mensaje</label>
+            <textarea [(ngModel)]="nuevaAlertaMensaje" rows="3"
+              placeholder="Escribe el mensaje de la alerta..."
+              class="w-full bg-gray-800 border border-gray-700 text-white px-3 py-2 text-sm focus:outline-none focus:border-amber-500 resize-none">
+            </textarea>
+          </div>
+
+          <!-- Destinatarios -->
+          <div class="mb-5">
+            <label class="text-gray-400 text-[10px] font-black uppercase tracking-wider block mb-2">
+              Destinatarios
+              <span class="text-gray-600 normal-case ml-1 font-normal">(vacío = todos los jugadores)</span>
+            </label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 max-h-40 overflow-y-auto bg-gray-800/50 border border-gray-700 p-3">
+              <label *ngFor="let j of jugadores"
+                class="flex items-center gap-2 cursor-pointer px-2 py-1.5 hover:bg-gray-700/50 rounded transition-colors">
+                <input type="checkbox"
+                  [checked]="nuevaAlertaJugadorIds.includes(j.id)"
+                  (change)="toggleJugadorAlerta(j.id, $any($event.target).checked)"
+                  class="w-3.5 h-3.5 accent-amber-500">
+                <span class="text-white text-xs font-semibold truncate">{{ j.nombre }} {{ j.apellidos }}</span>
+              </label>
+            </div>
+            <p *ngIf="nuevaAlertaJugadorIds.length === 0" class="text-gray-600 text-xs mt-1.5">
+              Se enviará a todos los jugadores.
+            </p>
+            <p *ngIf="nuevaAlertaJugadorIds.length > 0" class="text-amber-400 text-xs mt-1.5 font-semibold">
+              {{ nuevaAlertaJugadorIds.length }} jugador{{ nuevaAlertaJugadorIds.length > 1 ? 'es' : '' }} seleccionado{{ nuevaAlertaJugadorIds.length > 1 ? 's' : '' }}.
+            </p>
+          </div>
+
+          <!-- Feedback y botón -->
+          <p *ngIf="alertaExito" class="text-emerald-400 text-sm font-semibold mb-3">{{ alertaExito }}</p>
+          <p *ngIf="alertaError" class="text-red-400 text-sm font-semibold mb-3">{{ alertaError }}</p>
+
+          <button (click)="enviarAlerta()"
+            [disabled]="enviandoAlerta || !nuevaAlertaMensaje.trim()"
+            class="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 disabled:opacity-50 disabled:cursor-not-allowed text-gray-900 font-black px-6 py-2.5 text-sm uppercase tracking-wider transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+            </svg>
+            {{ enviandoAlerta ? 'Enviando...' : 'Enviar alerta' }}
+          </button>
+        </div>
+
+        <!-- Historial de alertas enviadas -->
+        <div class="bg-[#0a1219] border border-gray-800">
+          <div class="px-5 py-3 border-b border-gray-800 flex items-center gap-3">
+            <div class="w-1 h-5 bg-gray-600"></div>
+            <h3 class="text-gray-400 font-black text-xs uppercase tracking-wider">Historial de alertas enviadas</h3>
+          </div>
+
+          <div class="divide-y divide-gray-800">
+            <p *ngIf="alertasEnviadas.length === 0"
+               class="text-gray-600 text-sm text-center py-8 font-semibold">
+              Aún no has enviado ninguna alerta.
+            </p>
+            <div *ngFor="let a of alertasEnviadas"
+                 class="px-5 py-4 flex items-start justify-between gap-4 group">
+              <div class="flex-1 min-w-0">
+                <p class="text-gray-200 text-sm font-semibold leading-relaxed">{{ a.mensaje }}</p>
+                <p class="text-gray-600 text-xs mt-1">{{ a.fecha | date:'dd/MM/yyyy · HH:mm' }}</p>
+              </div>
+              <button (click)="eliminarAlerta(a)"
+                class="shrink-0 text-gray-700 hover:text-red-400 transition-colors p-1.5 opacity-0 group-hover:opacity-100"
+                title="Eliminar alerta">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /alertas -->
+
     </main>
   </div><!-- /flex layout -->
 </div>

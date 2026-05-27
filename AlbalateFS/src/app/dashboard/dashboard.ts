@@ -5,6 +5,7 @@ import { AuthService, CurrentUser } from '../core/services/auth.service';
 import { JugadorService, Jugador } from '../core/services/jugador.service';
 import { EstadisticaService } from '../core/services/estadistica.service';
 import { VideoService, VideoTactico } from '../core/services/video.service';
+import { AlertaService, AlertaJugador } from '../core/services/alerta.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -39,17 +40,15 @@ export class DashboardComponent implements OnInit {
   };
 
   correccionesVideo: VideoTactico[] = [];
-
-  notificaciones = [
-    { titulo: 'Convocatoria publicada', mensaje: 'Estás convocado para el partido del sábado.', tipo: 'info' },
-    { titulo: 'Nuevos datos disponibles', mensaje: 'Se han subido las estadísticas del último partido.', tipo: 'success' }
-  ];
+  alertas: AlertaJugador[] = [];
+  jugadorId = 0;
 
   constructor(
     private authService: AuthService,
     private jugadorService: JugadorService,
     private estadisticaService: EstadisticaService,
     private videoService: VideoService,
+    private alertaService: AlertaService,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) {}
@@ -75,11 +74,14 @@ export class DashboardComponent implements OnInit {
         this.jugador.piernasDominante = jugador.piernasDominante;
         this.cdr.detectChanges();
 
+        this.jugadorId = jugador.id;
+
         forkJoin({
           stats: this.estadisticaService.getByJugador(jugador.id),
-          videos: this.videoService.getAll()
+          videos: this.videoService.getAll(),
+          alertas: this.alertaService.getMisAlertas(jugador.id)
         }).subscribe({
-          next: ({ stats, videos }) => {
+          next: ({ stats, videos, alertas }) => {
             this.estadisticas.goles = stats.reduce((s, e) => s + e.goles, 0);
             this.estadisticas.asistencias = stats.reduce((s, e) => s + e.asistencias, 0);
             this.estadisticas.minutos = stats.reduce((s, e) => s + e.minutos, 0);
@@ -88,6 +90,9 @@ export class DashboardComponent implements OnInit {
               ? parseFloat((conCalif.reduce((s, e) => s + e.calificacion, 0) / conCalif.length).toFixed(1))
               : 0;
             this.correccionesVideo = videos.filter(v => v.jugadores?.some(j => j.id === jugador.id));
+            this.alertas = alertas.sort((a, b) =>
+              new Date(b.alerta.fecha).getTime() - new Date(a.alerta.fecha).getTime()
+            );
             this.isLoading = false;
             this.cdr.detectChanges();
           },
@@ -116,6 +121,20 @@ export class DashboardComponent implements OnInit {
     if (!this.jugador.fechaNacimiento) return '-';
     return new Date(this.jugador.fechaNacimiento).toLocaleDateString('es-ES', {
       day: 'numeric', month: 'long', year: 'numeric'
+    });
+  }
+
+  get alertasNoLeidas(): number {
+    return this.alertas.filter(a => !a.leida).length;
+  }
+
+  marcarLeida(alerta: AlertaJugador): void {
+    if (alerta.leida) return;
+    this.alertaService.marcarLeida(alerta.alerta.id, this.jugadorId).subscribe({
+      next: (updated) => {
+        alerta.leida = updated.leida;
+        this.cdr.detectChanges();
+      }
     });
   }
 }

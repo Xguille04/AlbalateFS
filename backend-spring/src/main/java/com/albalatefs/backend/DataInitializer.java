@@ -282,52 +282,52 @@ public class DataInitializer implements CommandLineRunner {
         productoRepo.save(new Producto(null, "Camiseta Oficial 1ª Equipación 25/26",
             "Camiseta oficial de juego del Albalate FS. Tejido técnico transpirable. Tallas S-XXL.",
             new java.math.BigDecimal("35.00"),
-            "https://images.unsplash.com/photo-1562575214-da9fcf59b907?w=400",
+            "assets/tienda/camiseta-1a.jpg",
             "Ropa", 50, true));
         productoRepo.save(new Producto(null, "Camiseta Oficial 2ª Equipación 25/26",
             "Camiseta alternativa del Albalate FS. Edición limitada temporada 25/26.",
             new java.math.BigDecimal("35.00"),
-            "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400",
+            "assets/tienda/camiseta-2a.jpg",
             "Ropa", 30, false));
         productoRepo.save(new Producto(null, "Chándal Oficial Albalate FS",
             "Conjunto de chándal con escudo bordado. Ideal para calentamiento y uso casual.",
             new java.math.BigDecimal("55.00"),
-            "https://images.unsplash.com/photo-1516478177764-9fe5bd7e9717?w=400",
+            "assets/tienda/chandal.jpg",
             "Ropa", 20, true));
         productoRepo.save(new Producto(null, "Bufanda Albalate FS",
             "Bufanda de punto con los colores del club. Perfecta para animar en el pabellón.",
             new java.math.BigDecimal("12.00"),
-            "https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?w=400",
+            "assets/tienda/bufanda.jpg",
             "Accesorios", 100, false));
         productoRepo.save(new Producto(null, "Gorra Albalate FS",
             "Gorra ajustable con escudo bordado. Talla única.",
             new java.math.BigDecimal("15.00"),
-            "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400",
+            "assets/tienda/gorra.jpg",
             "Accesorios", 60, false));
         productoRepo.save(new Producto(null, "Llavero Escudo",
             "Llavero metálico con el escudo del Albalate FS. Acabado premium.",
             new java.math.BigDecimal("5.00"),
-            "https://images.unsplash.com/photo-1558171813-0e6de3e59af9?w=400",
+            "assets/tienda/llavero.jpg",
             "Accesorios", 200, false));
         productoRepo.save(new Producto(null, "Balón Oficial Entrenamiento",
             "Balón de fútbol sala oficial de los entrenamientos del equipo. Talla 4.",
             new java.math.BigDecimal("28.00"),
-            "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=400",
+            "assets/tienda/balon.jpg",
             "Equipamiento", 15, true));
         productoRepo.save(new Producto(null, "Mochila Albalate FS",
             "Mochila deportiva con compartimentos y escudo del club. 30L de capacidad.",
             new java.math.BigDecimal("40.00"),
-            "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400",
+            "assets/tienda/mochila.jpg",
             "Equipamiento", 25, true));
         productoRepo.save(new Producto(null, "Taza Albalate FS",
             "Taza de cerámica con el escudo y colores del club. 330ml.",
             new java.math.BigDecimal("8.00"),
-            "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=400",
+            "assets/tienda/taza.jpg",
             "Accesorios", 80, false));
         productoRepo.save(new Producto(null, "Calcetines Técnicos (pack x3)",
             "Pack de 3 pares de calcetines técnicos con el logo del club. Tallas 36-46.",
             new java.math.BigDecimal("10.00"),
-            "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=400",
+            "assets/tienda/calcetines.jpg",
             "Ropa", 40, false));
         System.out.println("✅ 10 productos de tienda insertados.");
     }

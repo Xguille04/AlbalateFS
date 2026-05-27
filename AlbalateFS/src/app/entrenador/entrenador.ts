@@ -7,6 +7,7 @@ import { JugadorService, Jugador } from '../core/services/jugador.service';
 import { EstadisticaService, EstadisticaJugador, EstadisticaRequest } from '../core/services/estadistica.service';
 import { VideoService, VideoTactico, VideoRequest } from '../core/services/video.service';
 import { PartidoService, Partido } from '../core/services/partido.service';
+import { AlertaService, AlertaInfo } from '../core/services/alerta.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -45,12 +46,24 @@ export class EntrenadorComponent implements OnInit {
   isLoading = true;
   savingError = '';
 
+  // Vista principal: jugador o alertas
+  mainView: 'jugador' | 'alertas' = 'jugador';
+
+  // Alertas
+  alertasEnviadas: AlertaInfo[] = [];
+  nuevaAlertaMensaje = '';
+  nuevaAlertaJugadorIds: number[] = [];
+  enviandoAlerta = false;
+  alertaExito = '';
+  alertaError = '';
+
   constructor(
     private authService: AuthService,
     private jugadorService: JugadorService,
     private estadisticaService: EstadisticaService,
     private videoService: VideoService,
     private partidoService: PartidoService,
+    private alertaService: AlertaService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
@@ -291,5 +304,67 @@ export class EntrenadorComponent implements OnInit {
 
   cerrarSesion(): void {
     this.router.navigate(['/']);
+  }
+
+  // ── ALERTAS ─────────────────────────────────────────────────────────────
+
+  mostrarAlertas(): void {
+    this.mainView = 'alertas';
+    this.selectedJugador = null;
+    this.alertaService.getAll().subscribe({
+      next: (alertas) => {
+        this.alertasEnviadas = alertas.sort((a, b) =>
+          new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
+        );
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  toggleJugadorAlerta(id: number, checked: boolean): void {
+    if (checked) {
+      if (!this.nuevaAlertaJugadorIds.includes(id)) {
+        this.nuevaAlertaJugadorIds = [...this.nuevaAlertaJugadorIds, id];
+      }
+    } else {
+      this.nuevaAlertaJugadorIds = this.nuevaAlertaJugadorIds.filter(j => j !== id);
+    }
+  }
+
+  enviarAlerta(): void {
+    if (!this.nuevaAlertaMensaje.trim()) return;
+    this.enviandoAlerta = true;
+    this.alertaExito = '';
+    this.alertaError = '';
+    const req = {
+      mensaje: this.nuevaAlertaMensaje.trim(),
+      jugadorIds: this.nuevaAlertaJugadorIds.length > 0 ? this.nuevaAlertaJugadorIds : undefined
+    };
+    this.alertaService.crear(req).subscribe({
+      next: (creada) => {
+        this.alertasEnviadas.unshift(creada);
+        this.nuevaAlertaMensaje = '';
+        this.nuevaAlertaJugadorIds = [];
+        this.enviandoAlerta = false;
+        this.alertaExito = 'Alerta enviada correctamente.';
+        this.cdr.detectChanges();
+        setTimeout(() => { this.alertaExito = ''; this.cdr.detectChanges(); }, 3000);
+      },
+      error: () => {
+        this.alertaError = 'Error al enviar la alerta. Inténtalo de nuevo.';
+        this.enviandoAlerta = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  eliminarAlerta(alerta: AlertaInfo): void {
+    if (!confirm(`¿Eliminar esta alerta?`)) return;
+    this.alertaService.delete(alerta.id).subscribe({
+      next: () => {
+        this.alertasEnviadas = this.alertasEnviadas.filter(a => a.id !== alerta.id);
+        this.cdr.detectChanges();
+      }
+    });
   }
 }
