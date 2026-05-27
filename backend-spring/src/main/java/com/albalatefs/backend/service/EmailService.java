@@ -32,8 +32,8 @@ public class EmailService {
     private void sendEmail(String to, String subject, String html,
                            byte[] attachmentBytes, String attachmentFilename) {
         try {
-            if (brevoApiKey == null || brevoApiKey.isBlank()) {
-                System.err.println("[EMAIL] BREVO_API_KEY no configurada — email a " + to + " no enviado.");
+            if (brevoApiKey == null || brevoApiKey.isBlank() || brevoApiKey.startsWith("YOUR_")) {
+                System.err.println("[EMAIL] BREVO_API_KEY no configurada correctamente — email a " + to + " no enviado.");
                 return;
             }
 

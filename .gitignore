@@ -1,6 +1,13 @@
 # VS Code
 .vscode/
 
+# ── Secretos y configuración local ────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+backend-spring/src/main/resources/application-local.properties
+backend-spring/src/main/resources/application-secret*.properties
+
 # Backend Spring Boot
 backend-spring/target/
 backend-spring/.mvn/
