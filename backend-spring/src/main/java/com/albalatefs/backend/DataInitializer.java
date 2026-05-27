@@ -67,6 +67,25 @@ public class DataInitializer implements CommandLineRunner {
                 if (productoRepo.count() == 0) {
                     seedProductos();
                 }
+                // Crear usuarios SOCIO para los socios seeded que no tengan usuario aún
+                Object[][] sociosData = {
+                    {"miguel.lorente@gmail.com", "12345678A"},
+                    {"rblasco@hotmail.com",       "23456789B"},
+                    {"fernando.querol@gmail.com", "34567890C"},
+                    {"lucia.moya@gmail.com",      "45678901D"},
+                    {"jarino@outlook.com",        "56789012E"},
+                    {"elena.pallares@gmail.com",  "67890123F"},
+                    {"tguillen@gmail.com",        "78901234G"},
+                    {"amparo.sancho@hotmail.com", "89012345H"},
+                };
+                for (Object[] d : sociosData) {
+                    String email = (String) d[0];
+                    String dni   = (String) d[1];
+                    if (!usuarioRepo.existsByEmail(email)) {
+                        usuarioRepo.save(new Usuario(null, email, passwordEncoder.encode(dni), "SOCIO"));
+                        System.out.println("[INIT] Usuario SOCIO creado para: " + email);
+                    }
+                }
                 return;
             }
             // Limpiar datos antiguos para re-sembrar (orden respetando FK constraints)
