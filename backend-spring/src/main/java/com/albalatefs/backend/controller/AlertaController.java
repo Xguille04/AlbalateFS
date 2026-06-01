@@ -48,7 +48,7 @@ public class AlertaController {
             Authentication auth) {
 
         String email = auth.getName();
-        Usuario remitente = usuarioRepository.findByEmail(email)
+        Usuario remitente = usuarioRepository.findByEmailIgnoreCase(email)
                 .orElse(null);
         if (remitente == null) {
             return ResponseEntity.status(403).build();

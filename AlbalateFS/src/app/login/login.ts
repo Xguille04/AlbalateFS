@@ -33,7 +33,12 @@ export class LoginComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.authService.login(this.loginForm.value).subscribe({
+    const credentials = {
+      email: this.loginForm.value.email.trim().toLowerCase(),
+      password: this.loginForm.value.password
+    };
+
+    this.authService.login(credentials).subscribe({
       next: (response) => {
         this.isLoading = false;
         this.router.navigate(['/']);

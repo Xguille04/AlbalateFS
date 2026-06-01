@@ -53,7 +53,7 @@ public class SocioController {
         Socio saved = socioRepository.save(socio);
 
         // Crear cuenta de usuario para el socio (contraseña = DNI por defecto)
-        if (!usuarioRepository.existsByEmail(saved.getEmail())) {
+        if (!usuarioRepository.existsByEmailIgnoreCase(saved.getEmail())) {
             Usuario usuario = new Usuario();
             usuario.setEmail(saved.getEmail());
             usuario.setPassword(passwordEncoder.encode(saved.getDni()));

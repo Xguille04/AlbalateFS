@@ -53,12 +53,12 @@ public class DataInitializer implements CommandLineRunner {
         if (usuarioRepo.count() > 0) {
             boolean tieneNuevosCampos = jugadorRepo.count() > 0 &&
                 jugadorRepo.findAll().get(0).getPiernasDominante() != null;
-            boolean tieneRolEntrenador = usuarioRepo.findByEmail("edu@albalatefs.com")
+            boolean tieneRolEntrenador = usuarioRepo.findByEmailIgnoreCase("edu@albalatefs.com")
                 .map(u -> "ENTRENADOR".equals(u.getRol()))
                 .orElse(false);
             // Verificar que las contraseñas están codificadas con BCrypt (empiezan por $2)
             // Si se migraron como texto plano el login fallará con "Bad credentials"
-            boolean tienePasswordBcrypt = usuarioRepo.findByEmail("edu@albalatefs.com")
+            boolean tienePasswordBcrypt = usuarioRepo.findByEmailIgnoreCase("edu@albalatefs.com")
                 .map(u -> u.getPassword() != null && u.getPassword().startsWith("$2"))
                 .orElse(false);
 
@@ -81,7 +81,7 @@ public class DataInitializer implements CommandLineRunner {
                 for (Object[] d : sociosData) {
                     String email = (String) d[0];
                     String dni   = (String) d[1];
-                    if (!usuarioRepo.existsByEmail(email)) {
+                    if (!usuarioRepo.existsByEmailIgnoreCase(email)) {
                         usuarioRepo.save(new Usuario(null, email, passwordEncoder.encode(dni), "SOCIO"));
                         System.out.println("[INIT] Usuario SOCIO creado para: " + email);
                     }
@@ -210,7 +210,7 @@ public class DataInitializer implements CommandLineRunner {
             String email = (String) d[0];
             String dni   = (String) d[1];
             socioRepo.save(new Socio(null, (String) d[2], (String) d[3], dni, email, (String) d[4], (Date) d[5]));
-            if (!usuarioRepo.existsByEmail(email)) {
+            if (!usuarioRepo.existsByEmailIgnoreCase(email)) {
                 usuarioRepo.save(new Usuario(null, email, passwordEncoder.encode(dni), "SOCIO"));
             }
         }
