@@ -7,9 +7,10 @@ export const entrenadorGuard: CanActivateFn = () => {
   const router = inject(Router);
   const user = authService.getCurrentUser();
 
-  if (user && user.rol === 'ENTRENADOR') {
+  if (user && user.rol === 'ENTRENADOR' && !authService.isTokenExpired()) {
     return true;
   }
 
+  authService.logout();
   return router.createUrlTree(['/login']);
 };
