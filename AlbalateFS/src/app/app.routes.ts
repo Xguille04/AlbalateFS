@@ -1,13 +1,5 @@
 ﻿import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home';
-import { LoginComponent } from './login/login';
-import { DashboardComponent } from './dashboard/dashboard';
-import { EntrenadorComponent } from './entrenador/entrenador';
-import { SocioFormComponent } from './socio-form/socio-form';
-import { PlantillaComponent } from './plantilla/plantilla';
-import { CalendarioComponent } from './calendario/calendario';
-import { EstadisticasComponent } from './estadisticas/estadisticas';
-import { TiendaComponent } from './tienda/tienda';
 import { authGuard } from './core/guards/auth.guard';
 import { entrenadorGuard } from './core/guards/entrenador.guard';
 
@@ -15,23 +7,51 @@ export const routes: Routes = [
   // Ruta raiz: Carga el portal publico por defecto para los aficionados
   { path: '', component: HomeComponent },
 
-  // Rutas del area privada y autenticacion
-  { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
-  { path: 'entrenador', component: EntrenadorComponent, canActivate: [entrenadorGuard] },
+  // Rutas del area privada y autenticacion (lazy loaded)
+  {
+    path: 'login',
+    loadComponent: () => import('./login/login').then(m => m.LoginComponent)
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./dashboard/dashboard').then(m => m.DashboardComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'entrenador',
+    loadComponent: () => import('./entrenador/entrenador').then(m => m.EntrenadorComponent),
+    canActivate: [entrenadorGuard]
+  },
 
-  // Ruta publica para la plantilla de jugadores
-  { path: 'plantilla', component: PlantillaComponent },
+  // Ruta publica para la plantilla de jugadores (lazy loaded)
+  {
+    path: 'plantilla',
+    loadComponent: () => import('./plantilla/plantilla').then(m => m.PlantillaComponent)
+  },
 
-  // Ruta para el formulario de alta de socios
-  { path: 'socio', component: SocioFormComponent },
+  // Ruta para el formulario de alta de socios (lazy loaded)
+  {
+    path: 'socio',
+    loadComponent: () => import('./socio-form/socio-form').then(m => m.SocioFormComponent)
+  },
 
-  { path: 'calendario', component: CalendarioComponent },
+  // Calendario (lazy loaded)
+  {
+    path: 'calendario',
+    loadComponent: () => import('./calendario/calendario').then(m => m.CalendarioComponent)
+  },
 
-  { path: 'estadisticas', component: EstadisticasComponent },
+  // Estadísticas (lazy loaded)
+  {
+    path: 'estadisticas',
+    loadComponent: () => import('./estadisticas/estadisticas').then(m => m.EstadisticasComponent)
+  },
 
-  // Tienda online
-  { path: 'tienda', component: TiendaComponent },
+  // Tienda online (lazy loaded)
+  {
+    path: 'tienda',
+    loadComponent: () => import('./tienda/tienda').then(m => m.TiendaComponent)
+  },
 
   // Ruta comodin (Wildcard): SIEMPRE AL FINAL
   { path: '**', redirectTo: '', pathMatch: 'full' }
