@@ -3,6 +3,7 @@ package com.albalatefs.backend.controller;
 import com.albalatefs.backend.payload.PaymentIntentRequest;
 import com.albalatefs.backend.payload.PedidoRequest;
 import com.albalatefs.backend.service.EmailService;
+import com.albalatefs.backend.core.observability.ObservabilityService;
 import com.stripe.Stripe;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
@@ -31,6 +32,9 @@ public class StripeController {
 
     @Autowired
     private EmailService emailService;
+    
+    @Autowired
+    private ObservabilityService observabilityService;
 
     /**
      * Returns the publishable key so the frontend can initialise Stripe.js
@@ -62,8 +66,11 @@ public class StripeController {
                     .build();
 
             PaymentIntent intent = PaymentIntent.create(params);
+            observabilityService.logPaymentEvent("MEMBERSHIP_INITIATED", 
+                intent.getId(), amount, true, "Membership payment intent created");
             return ResponseEntity.ok(Map.of("clientSecret", intent.getClientSecret()));
         } catch (Exception e) {
+            observabilityService.logPaymentEvent("MEMBERSHIP_FAILED", "UNKNOWN", socioFeeCents, false, e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "No se pudo iniciar el pago con Stripe");
         }
     }
@@ -90,8 +97,11 @@ public class StripeController {
                     .build();
 
             PaymentIntent intent = PaymentIntent.create(params);
+            observabilityService.logPaymentEvent("ORDER_INITIATED", 
+                intent.getId(), amount, true, "Order payment intent created for " + request.getEmail());
             return ResponseEntity.ok(Map.of("clientSecret", intent.getClientSecret()));
         } catch (Exception e) {
+            observabilityService.logPaymentEvent("ORDER_FAILED", "UNKNOWN", request.getAmountCents(), false, e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "No se pudo iniciar el pago del pedido");
         }
     }
