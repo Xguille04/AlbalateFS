@@ -14,7 +14,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/videos")
-@CrossOrigin(origins = "*")
 public class VideoTacticoController {
 
     @Autowired

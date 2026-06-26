@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/jugadores")
-@CrossOrigin(origins = "*") // Para desarrollo con Angular
 public class JugadorController {
 
     @Autowired
