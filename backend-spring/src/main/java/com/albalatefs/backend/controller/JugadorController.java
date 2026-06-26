@@ -2,7 +2,11 @@ package com.albalatefs.backend.controller;
 
 import com.albalatefs.backend.model.Jugador;
 import com.albalatefs.backend.repository.JugadorRepository;
+import com.albalatefs.backend.dto.PaginatedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +20,24 @@ public class JugadorController {
     private JugadorRepository jugadorRepository;
 
     @GetMapping
-    public List<Jugador> getAllJugadores() {
+    public ResponseEntity<PaginatedResponse<Jugador>> getAllJugadores(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "nombre") String sortBy) {
+        
+        if (page < 0 || size <= 0 || size > 100) {
+            size = Math.min(size, 100);
+            page = Math.max(page, 0);
+        }
+        
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        var pageResult = jugadorRepository.findAll(pageable);
+        var response = PaginatedResponse.of(pageResult.getContent(), page, size, pageResult.getTotalElements());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/simple")
+    public List<Jugador> getJugadoresSimple() {
         return jugadorRepository.findAll();
     }
 
