@@ -246,8 +246,61 @@
 
     </div>
 
-  </main>
-  <!-- ═══════════════════ FOOTER ═══════════════════ -->
+    <!-- ─── SECCIÓN CTA MEJORADA ────────────────────────────────────── -->
+    <div class="bg-gradient-to-r from-amber-600 to-amber-500 py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight mb-3">Únete a la Familia Albalate</h2>
+          <p class="text-amber-100 text-lg max-w-2xl mx-auto">Acceso exclusivo a eventos, descuentos y contenido premium</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- CTA 1: Hazte Socio -->
+          <a routerLink="/socio" *ngIf="!authService.isLoggedIn() || authService.getCurrentUser()?.rol !== 'SOCIO'"
+             class="bg-white group hover:bg-amber-50 transition-colors border-2 border-transparent hover:border-white rounded-lg p-8 text-center">
+            <div class="w-16 h-16 bg-amber-100 group-hover:bg-amber-200 transition-colors rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-amber-600" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path></svg>
+            </div>
+            <h3 class="text-xl font-black text-gray-900 mb-2 uppercase tracking-tight">Hazte Socio</h3>
+            <p class="text-gray-600 text-sm mb-4">Acceso a socios, beneficios exclusivos y eventos especiales</p>
+            <span class="inline-block bg-amber-500 text-white px-6 py-2 font-bold uppercase text-xs tracking-wider group-hover:bg-amber-600 transition-colors">Solicitar</span>
+          </a>
+          <div *ngIf="authService.isLoggedIn() && authService.getCurrentUser()?.rol === 'SOCIO'"
+               class="bg-white rounded-lg p-8 text-center border-2 border-green-500">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 3.062v6.372a3.066 3.066 0 01-2.812 3.062 3.066 3.066 0 01-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 01-1.745-.723 3.066 3.066 0 01-2.812-3.062V6.517a3.066 3.066 0 012.812-3.062zM9 11a1 1 0 11-2 0 1 1 0 012 0z" clip-rule="evenodd"></path></svg>
+            </div>
+            <h3 class="text-xl font-black text-gray-900 mb-2 uppercase tracking-tight">Eres Socio</h3>
+            <p class="text-gray-600 text-sm mb-4">¡Acceso completo a todos los beneficios!</p>
+            <a routerLink="/mi-cuenta" class="inline-block bg-green-500 text-white px-6 py-2 font-bold uppercase text-xs tracking-wider hover:bg-green-600 transition-colors">Ver Mi Cuenta</a>
+          </div>
+
+          <!-- CTA 2: Centro de Partidos -->
+          <a routerLink="/partidos"
+             class="bg-white group hover:bg-blue-50 transition-colors border-2 border-transparent hover:border-white rounded-lg p-8 text-center">
+            <div class="w-16 h-16 bg-blue-100 group-hover:bg-blue-200 transition-colors rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
+            </div>
+            <h3 class="text-xl font-black text-gray-900 mb-2 uppercase tracking-tight">Centro de Partidos</h3>
+            <p class="text-gray-600 text-sm mb-4">Próximos enfrentamientos y resultados de temporada</p>
+            <span class="inline-block bg-blue-500 text-white px-6 py-2 font-bold uppercase text-xs tracking-wider group-hover:bg-blue-600 transition-colors">Explorar</span>
+          </a>
+
+          <!-- CTA 3: Tienda -->
+          <a routerLink="/tienda"
+             class="bg-white group hover:bg-purple-50 transition-colors border-2 border-transparent hover:border-white rounded-lg p-8 text-center">
+            <div class="w-16 h-16 bg-purple-100 group-hover:bg-purple-200 transition-colors rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-purple-600" fill="currentColor" viewBox="0 0 20 20"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042L5.06 9H9a1 1 0 000-2H5.22L5.09 4H17a1 1 0 011 1v1h2a1 1 0 110 2h-1v7.5a2.5 2.5 0 01-5 0v-1a.5.5 0 00-1 0v1a2.5 2.5 0 01-5 0V4.9L7.1 9H4a1 1 0 01-.9-.55l-1.263-2.910A1 1 0 001 5V2a1 1 0 000-1h2zm6 14.5a.5.5 0 11-1 0 .5.5 0 011 0zM16 16.5a.5.5 0 11-1 0 .5.5 0 011 0z"></path></svg>
+            </div>
+            <h3 class="text-xl font-black text-gray-900 mb-2 uppercase tracking-tight">Tienda</h3>
+            <p class="text-gray-600 text-sm mb-4">Compra merchandising y equipación oficial</p>
+            <span class="inline-block bg-purple-500 text-white px-6 py-2 font-bold uppercase text-xs tracking-wider group-hover:bg-purple-600 transition-colors">Comprar</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+
   <footer class="bg-[#0f1923] border-t-2 border-amber-500 mt-0">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
