@@ -22,6 +22,8 @@
              class="px-4 py-5 text-gray-300 hover:text-white text-sm font-semibold uppercase tracking-wider transition-colors border-b-2 border-transparent">Inicio</a>
           <a routerLink="/plantilla" routerLinkActive="text-amber-500 border-b-2 border-amber-500"
              class="px-4 py-5 text-gray-300 hover:text-white text-sm font-semibold uppercase tracking-wider transition-colors border-b-2 border-transparent">Plantilla</a>
+          <a routerLink="/partidos" routerLinkActive="text-amber-500 border-b-2 border-amber-500"
+             class="px-4 py-5 text-gray-300 hover:text-white text-sm font-semibold uppercase tracking-wider transition-colors border-b-2 border-transparent">Partidos</a>
           <a routerLink="/calendario" routerLinkActive="text-amber-500 border-b-2 border-amber-500"
              class="px-4 py-5 text-gray-300 hover:text-white text-sm font-semibold uppercase tracking-wider transition-colors border-b-2 border-transparent">Calendario</a>
           <a routerLink="/estadisticas" routerLinkActive="text-amber-500 border-b-2 border-amber-500"
@@ -63,6 +65,12 @@
                class="hidden md:flex items-center gap-1.5 text-gray-300 hover:text-white text-sm font-semibold border border-gray-600 px-4 py-2 hover:border-amber-500 transition-colors">
               <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
               Mi Área
+            </a>
+            <a *ngIf="authService.getCurrentUser()?.rol === 'SOCIO'"
+               routerLink="/mi-cuenta"
+               class="hidden md:flex items-center gap-1.5 text-gray-300 hover:text-white text-sm font-semibold border border-gray-600 px-4 py-2 hover:border-amber-500 transition-colors">
+              <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+              Mi Cuenta
             </a>
             <button (click)="authService.logout()"
                     class="hidden md:flex items-center gap-1 text-gray-500 hover:text-red-400 text-xs font-semibold transition-colors">

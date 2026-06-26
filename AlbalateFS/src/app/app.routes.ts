@@ -23,6 +23,13 @@ export const routes: Routes = [
     canActivate: [entrenadorGuard]
   },
 
+  // Ruta para perfil de socio (lazy loaded)
+  {
+    path: 'mi-cuenta',
+    loadComponent: () => import('./socio-profile/socio-profile').then(m => m.SocioProfileComponent),
+    canActivate: [authGuard]
+  },
+
   // Ruta publica para la plantilla de jugadores (lazy loaded)
   {
     path: 'plantilla',
@@ -33,6 +40,12 @@ export const routes: Routes = [
   {
     path: 'socio',
     loadComponent: () => import('./socio-form/socio-form').then(m => m.SocioFormComponent)
+  },
+
+  // Centro de partidos (lazy loaded)
+  {
+    path: 'partidos',
+    loadComponent: () => import('./match-center/match-center').then(m => m.MatchCenterComponent)
   },
 
   // Calendario (lazy loaded)
