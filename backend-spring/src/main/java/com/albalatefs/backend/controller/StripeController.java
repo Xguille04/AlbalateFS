@@ -6,16 +6,18 @@ import com.albalatefs.backend.service.EmailService;
 import com.stripe.Stripe;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/stripe")
-@CrossOrigin(origins = "*")
 public class StripeController {
 
     @Value("${stripe.secret.key}")
@@ -23,6 +25,9 @@ public class StripeController {
 
     @Value("${stripe.publishable.key}")
     private String stripePublishableKey;
+
+    @Value("${app.socio.fee-cents:3000}")
+    private long socioFeeCents;
 
     @Autowired
     private EmailService emailService;
@@ -39,12 +44,12 @@ public class StripeController {
      * Creates a PaymentIntent for the membership fee.
      */
     @PostMapping("/create-payment-intent")
-    public ResponseEntity<?> createPaymentIntent(@RequestBody PaymentIntentRequest request) {
+    public ResponseEntity<?> createPaymentIntent(@Valid @RequestBody PaymentIntentRequest request) {
         try {
             Stripe.apiKey = stripeSecretKey;
 
-            long amount = request.getAmountCents() > 0 ? request.getAmountCents() : 3000;
-            String currency = request.getCurrency() != null ? request.getCurrency() : "eur";
+            long amount = socioFeeCents;
+            String currency = request.getCurrency() == null ? "eur" : request.getCurrency().trim().toLowerCase();
 
             PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                     .setAmount(amount)
@@ -59,7 +64,7 @@ public class StripeController {
             PaymentIntent intent = PaymentIntent.create(params);
             return ResponseEntity.ok(Map.of("clientSecret", intent.getClientSecret()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "No se pudo iniciar el pago con Stripe");
         }
     }
 
@@ -67,11 +72,11 @@ public class StripeController {
      * Creates a PaymentIntent for a tienda order.
      */
     @PostMapping("/create-order-payment-intent")
-    public ResponseEntity<?> createOrderPaymentIntent(@RequestBody PedidoRequest request) {
+    public ResponseEntity<?> createOrderPaymentIntent(@Valid @RequestBody PedidoRequest request) {
         try {
             Stripe.apiKey = stripeSecretKey;
 
-            long amount = request.getAmountCents() > 0 ? request.getAmountCents() : 100;
+            long amount = request.getAmountCents();
 
             PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                     .setAmount(amount)
@@ -87,7 +92,7 @@ public class StripeController {
             PaymentIntent intent = PaymentIntent.create(params);
             return ResponseEntity.ok(Map.of("clientSecret", intent.getClientSecret()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "No se pudo iniciar el pago del pedido");
         }
     }
 
@@ -95,7 +100,7 @@ public class StripeController {
      * Sends order confirmation email after successful payment.
      */
     @PostMapping("/confirmar-pedido")
-    public ResponseEntity<?> confirmarPedido(@RequestBody PedidoRequest request) {
+    public ResponseEntity<?> confirmarPedido(@Valid @RequestBody PedidoRequest request) {
         try {
             double totalEur = request.getAmountCents() / 100.0;
             emailService.enviarConfirmacionPedido(
@@ -106,7 +111,7 @@ public class StripeController {
             );
             return ResponseEntity.ok(Map.of("ok", true));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "No se pudo confirmar el pedido");
         }
     }
 }

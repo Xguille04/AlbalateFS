@@ -7,6 +7,7 @@ import com.albalatefs.backend.payload.EstadisticaRequest;
 import com.albalatefs.backend.repository.EstadisticaJugadorRepository;
 import com.albalatefs.backend.repository.JugadorRepository;
 import com.albalatefs.backend.repository.PartidoRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/estadisticas")
-@CrossOrigin(origins = "*")
 public class EstadisticaController {
 
     @Autowired
@@ -43,7 +43,7 @@ public class EstadisticaController {
     }
 
     @PostMapping
-    public ResponseEntity<EstadisticaJugador> createEstadistica(@RequestBody EstadisticaRequest req) {
+    public ResponseEntity<EstadisticaJugador> createEstadistica(@Valid @RequestBody EstadisticaRequest req) {
         Jugador jugador = jugadorRepository.findById(req.getJugadorId())
                 .orElse(null);
         Partido partido = partidoRepository.findById(req.getPartidoId())
@@ -58,7 +58,7 @@ public class EstadisticaController {
 
     @PutMapping("/{id}")
     public ResponseEntity<EstadisticaJugador> updateEstadistica(@PathVariable Long id,
-                                                                 @RequestBody EstadisticaRequest req) {
+                                                                 @Valid @RequestBody EstadisticaRequest req) {
         return estadisticaRepository.findById(id).map(est -> {
             est.setGoles(req.getGoles());
             est.setAsistencias(req.getAsistencias());
