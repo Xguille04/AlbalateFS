@@ -3,6 +3,8 @@ package com.albalatefs.backend;
 import com.albalatefs.backend.model.*;
 import com.albalatefs.backend.repository.*;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -10,9 +12,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Component
+@Profile("!prod")
 public class DataInitializer implements CommandLineRunner {
+
+    @Value("${app.seed.default-password:}")
+    private String seedDefaultPassword;
 
     private final UsuarioRepository usuarioRepo;
     private final JugadorRepository jugadorRepo;
@@ -101,7 +108,10 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // ── USUARIOS ────────────────────────────────────────────────────────
-        String pass = passwordEncoder.encode("albalate2026");
+        String plainSeedPassword = (seedDefaultPassword == null || seedDefaultPassword.isBlank())
+            ? UUID.randomUUID().toString().replace("-", "").substring(0, 12)
+            : seedDefaultPassword;
+        String pass = passwordEncoder.encode(plainSeedPassword);
 
         Usuario uAitor   = usuarioRepo.save(new Usuario(null, "aitor@albalatefs.com",   pass, "JUGADOR"));
         Usuario uAnas    = usuarioRepo.save(new Usuario(null, "anas@albalatefs.com",     pass, "JUGADOR"));
@@ -116,7 +126,7 @@ public class DataInitializer implements CommandLineRunner {
         Usuario uRodrigo = usuarioRepo.save(new Usuario(null, "rodrigo@albalatefs.com",  pass, "JUGADOR"));
         Usuario uSergio  = usuarioRepo.save(new Usuario(null, "sergio@albalatefs.com",   pass, "JUGADOR"));
         Usuario uTono    = usuarioRepo.save(new Usuario(null, "tono@albalatefs.com",     pass, "JUGADOR"));
-        usuarioRepo.save(new Usuario(null, "admin@albalatefs.com", passwordEncoder.encode("admin2026"), "ADMIN"));
+        usuarioRepo.save(new Usuario(null, "admin@albalatefs.com", pass, "ADMIN"));
 
         // ── JUGADORES ───────────────────────────────────────────────────────
         Jugador aitor   = jugadorRepo.save(new Jugador(null, "Aitor",     "Lazaro",           1,  "Portero",      "assets/jugadores/aitor.JPG",   LocalDate.of(1999,  3, 15), 2, "Derecha",    uAitor));

@@ -38,10 +38,7 @@ public class EmailService {
                 return;
             }
 
-            String keyPreview = brevoApiKey.length() > 10
-                    ? brevoApiKey.substring(0, 8) + "..." + brevoApiKey.substring(brevoApiKey.length() - 4)
-                    : "(clave demasiado corta)";
-            System.out.println("[EMAIL] Intentando enviar a " + to + " | key: " + keyPreview + " | from: " + fromEmail);
+            System.out.println("[EMAIL] Intentando enviar a " + to + " | from: " + fromEmail);
 
             Map<String, Object> body = new LinkedHashMap<>();
             body.put("sender", Map.of("name", "Albalate FS", "email", fromEmail));
@@ -76,7 +73,7 @@ public class EmailService {
         }
     }
 
-    public void enviarConfirmacionSocio(Socio socio) {
+    public void enviarConfirmacionSocio(Socio socio, String passwordInicial) {
         try {
             byte[] pdfBytes = generarCarnetPdf(socio);
 
@@ -129,10 +126,10 @@ public class EmailService {
                       </table>
                     </body>
                     </html>
-                    """.formatted(socio.getNombre(), numeroSocio,
+                        """.formatted(socio.getNombre(), numeroSocio,
                             socio.getNombre(), socio.getApellidos(),
                             socio.getDni(), fechaAlta,
-                            socio.getEmail(), socio.getDni());
+                          socio.getEmail(), passwordInicial != null ? passwordInicial : "(ya existente)");
 
             sendEmail(socio.getEmail(),
                     "¡Bienvenido al Albalate FS! Tu carnet de socio",
