@@ -1,0 +1,47 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy-backend:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy Backend to Render
+      env:
+        RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+      run: |
+        if [ ! -z "$RENDER_DEPLOY_HOOK" ]; then
+          curl "$RENDER_DEPLOY_HOOK"
+          echo "Backend deployment triggered on Render"
+        else
+          echo "RENDER_DEPLOY_HOOK not configured"
+        fi
+
+  deploy-frontend:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install Vercel CLI
+      run: npm install -g vercel
+    
+    - name: Deploy Frontend to Vercel
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      run: |
+        if [ ! -z "$VERCEL_TOKEN" ]; then
+          cd AlbalateFS && vercel --prod --token $VERCEL_TOKEN
+          echo "Frontend deployment to Vercel completed"
+        else
+          echo "VERCEL_TOKEN not configured"
+        fi

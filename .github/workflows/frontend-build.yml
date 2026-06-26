@@ -1,0 +1,49 @@
+name: Frontend Build & Test
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'AlbalateFS/**'
+      - '.github/workflows/frontend-*.yml'
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: AlbalateFS/package-lock.json
+
+    - name: Install Dependencies
+      working-directory: ./AlbalateFS
+      run: npm ci
+
+    - name: Run Linter
+      working-directory: ./AlbalateFS
+      run: npm run lint --if-present
+      continue-on-error: true
+
+    - name: Build Production
+      working-directory: ./AlbalateFS
+      run: npm run build
+
+    - name: Run Tests
+      working-directory: ./AlbalateFS
+      run: npm test -- --watch=false --browsers=ChromeHeadless
+      continue-on-error: true
+
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: angular-test-results
+        path: AlbalateFS/coverage/
