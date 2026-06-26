@@ -1,6 +1,7 @@
--- ═══════════════════════════════════════════════════════════════════════════
--- Flyway Migration V5: Videos y Contenido Multimedia
--- ═══════════════════════════════════════════════════════════════════════════
+-- V5: Schema for videos and multimedia content.
+-- Replaced by V6 which creates the correct plural table names matching JPA entities.
+-- This migration is intentionally a no-op to preserve Flyway version history.
+SELECT 1;
 
 -- Tabla videos (entrenamientos, goles, tutoriales)
 CREATE TABLE IF NOT EXISTS video (

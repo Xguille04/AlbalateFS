@@ -1,6 +1,7 @@
--- ═══════════════════════════════════════════════════════════════════════════
--- Flyway Migration V4: Tienda, Productos y Pagos Stripe
--- ═══════════════════════════════════════════════════════════════════════════
+-- V4: Schema for tienda, productos and pagos.
+-- Replaced by V6 which creates the correct plural table names matching JPA entities.
+-- This migration is intentionally a no-op to preserve Flyway version history.
+SELECT 1;
 
 -- Tabla productos
 CREATE TABLE IF NOT EXISTS producto (

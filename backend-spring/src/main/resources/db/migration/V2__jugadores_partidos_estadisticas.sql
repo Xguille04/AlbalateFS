@@ -1,9 +1,7 @@
--- ═══════════════════════════════════════════════════════════════════════════
--- Flyway Migration V2: Jugadores, Partidos y Estadísticas
--- ═══════════════════════════════════════════════════════════════════════════
-
--- Tabla jugadores
-CREATE TABLE IF NOT EXISTS jugador (
+-- V2: Schema for jugadores, partidos and estadisticas.
+-- Replaced by V6 which creates the correct plural table names matching JPA entities.
+-- This migration is intentionally a no-op to preserve Flyway version history.
+SELECT 1;
     id SERIAL PRIMARY KEY,
     usuario_id INTEGER UNIQUE REFERENCES usuario(id) ON DELETE SET NULL,
     numero_camiseta INTEGER,

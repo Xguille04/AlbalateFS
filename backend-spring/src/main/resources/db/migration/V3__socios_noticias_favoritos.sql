@@ -1,6 +1,7 @@
--- ═══════════════════════════════════════════════════════════════════════════
--- Flyway Migration V3: Socios, Noticias y Favoritos
--- ═══════════════════════════════════════════════════════════════════════════
+-- V3: Schema for socios, noticias and favoritos.
+-- Replaced by V6 which creates the correct plural table names matching JPA entities.
+-- This migration is intentionally a no-op to preserve Flyway version history.
+SELECT 1;
 
 -- Tabla solicitudes de socio
 CREATE TABLE IF NOT EXISTS socio (
