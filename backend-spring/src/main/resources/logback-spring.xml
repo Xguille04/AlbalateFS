@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <!-- Importar configuración específica del perfil -->
+  <springProfile name="!prod">
+    <!-- DESARROLLO: Logs en consola con formato legible -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder>
+        <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      </encoder>
+    </appender>
+
+    <root level="INFO">
+      <appender-ref ref="console" />
+    </root>
+
+    <!-- Reducir verbosidad de dependencias -->
+    <logger name="org.springframework" level="WARN" />
+    <logger name="org.hibernate" level="WARN" />
+    <logger name="org.postgresql" level="WARN" />
+
+  </springProfile>
+
+  <springProfile name="prod">
+    <!-- PRODUCCIÓN: Logs JSON en stdout (para Render/Docker) -->
+    <appender name="console-json" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+        <shortenedLoggerNameLength>20</shortenedLoggerNameLength>
+        <customFields>{"service":"albalate-fs-backend","environment":"production"}</customFields>
+        <includeContext>true</includeContext>
+        <includeMdc>true</includeMdc>
+        <includeCallerInfo>false</includeCallerInfo>
+      </encoder>
+    </appender>
+
+    <root level="INFO">
+      <appender-ref ref="console-json" />
+    </root>
+
+    <!-- Niveles específicos en producción -->
+    <logger name="org.springframework" level="WARN" />
+    <logger name="org.hibernate" level="WARN" />
+    <logger name="org.postgresql" level="WARN" />
+    <logger name="com.albalatefs" level="DEBUG" />
+
+  </springProfile>
+
+</configuration>
