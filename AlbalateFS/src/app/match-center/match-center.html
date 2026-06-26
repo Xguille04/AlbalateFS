@@ -55,7 +55,7 @@
         <div class="flex flex-col md:flex-row items-center justify-between gap-6">
           <!-- Fecha -->
           <div class="w-full md:w-32 text-center md:text-left">
-            <p class="text-xs text-gray-500 font-bold uppercase tracking-wider">{{ formatFecha(partido.fecha) }}</p>
+            <p class="text-xs text-gray-500 font-bold uppercase tracking-wider">{{ formatFecha(partido.fechaHora) }}</p>
             <p class="text-2xl font-black text-gray-900 mt-1">{{ partido.estado }}</p>
           </div>
 
@@ -71,7 +71,7 @@
               <!-- VS -->
               <div class="text-center">
                 <div class="text-2xl font-black text-gray-900">VS</div>
-                <p *ngIf="partido.campeonato" class="text-xs text-gray-500 mt-1">{{ partido.campeonato }}</p>
+                <p class="text-xs text-gray-500 mt-1">{{ partido.lugar }}</p>
               </div>
 
               <!-- Visitante -->
@@ -104,7 +104,7 @@
         <div class="flex flex-col md:flex-row items-center justify-between gap-6">
           <!-- Fecha -->
           <div class="w-full md:w-32 text-center md:text-left">
-            <p class="text-xs text-gray-500 font-bold uppercase tracking-wider">{{ formatFecha(partido.fecha) }}</p>
+            <p class="text-xs text-gray-500 font-bold uppercase tracking-wider">{{ formatFecha(partido.fechaHora) }}</p>
             <p [ngSwitch]="getVictoria(partido)" class="text-2xl font-black mt-1">
               <span *ngSwitchCase="'victoria'" class="text-green-600">✓ Victoria</span>
               <span *ngSwitchCase="'derrota'" class="text-red-600">✗ Derrota</span>

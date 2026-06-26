@@ -177,7 +177,7 @@
             <span class="text-gray-500">·</span>
             <span class="text-gray-400">{{ proximoPartido ? formatFecha(proximoPartido.fechaHora) : '—' }}</span>
             <span *ngIf="proximoPartido?.lugar" class="text-gray-500">·</span>
-            <span *ngIf="proximoPartido?.lugar" class="text-gray-400">{{ proximoPartido?.lugar }}</span>
+            <span *ngIf="proximoPartido?.lugar" class="text-gray-400">{{ proximoPartido!.lugar }}</span>
           </div>
         </div>
 
@@ -300,7 +300,8 @@
       </div>
     </div>
 
-
+  </main>
+  <!-- ═══════════════════ FOOTER ═══════════════════ -->
   <footer class="bg-[#0f1923] border-t-2 border-amber-500 mt-0">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 

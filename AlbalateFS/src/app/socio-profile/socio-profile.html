@@ -38,7 +38,7 @@
           <div class="text-xs font-bold uppercase tracking-widest opacity-80 mb-2">Carnet Digital</div>
           <div class="mb-6">
             <p class="text-sm opacity-90">Socio número</p>
-            <p class="text-3xl font-black tracking-tight">ALB-{{ currentUser?.id?.toString().padStart(4, '0') ?? '0000' }}</p>
+            <p class="text-3xl font-black tracking-tight">ALB-{{ (currentUser?.id != null ? currentUser!.id.toString().padStart(4, '0') : '0000') }}</p>
           </div>
           <div class="border-t border-white/30 pt-4">
             <p class="text-xs opacity-90">Miembro desde</p>

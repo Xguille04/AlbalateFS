@@ -33,13 +33,13 @@ export class MatchCenterComponent implements OnInit {
   getProximos(): Partido[] {
     return this.partidos()
       .filter(p => p.estado?.toLowerCase() !== 'finalizado')
-      .sort((a, b) => new Date(a.fecha || 0).getTime() - new Date(b.fecha || 0).getTime());
+      .sort((a, b) => new Date(a.fechaHora || 0).getTime() - new Date(b.fechaHora || 0).getTime());
   }
 
   getResultados(): Partido[] {
     return this.partidos()
       .filter(p => p.estado?.toLowerCase() === 'finalizado')
-      .sort((a, b) => new Date(b.fecha || 0).getTime() - new Date(a.fecha || 0).getTime());
+      .sort((a, b) => new Date(b.fechaHora || 0).getTime() - new Date(a.fechaHora || 0).getTime());
   }
 
   isLocal(partido: Partido): boolean {
