@@ -21,7 +21,12 @@ public class ProductoController {
     private ProductoRepository productoRepository;
 
     @GetMapping
-    public ResponseEntity<PaginatedResponse<Producto>> getAll(
+    public List<Producto> getAll() {
+        return productoRepository.findAll();
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<PaginatedResponse<Producto>> getAllPaged(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "nombre") String sortBy) {
@@ -35,11 +40,6 @@ public class ProductoController {
         var pageResult = productoRepository.findAll(pageable);
         var response = PaginatedResponse.of(pageResult.getContent(), page, size, pageResult.getTotalElements());
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/simple")
-    public List<Producto> getAllSimple() {
-        return productoRepository.findAll();
     }
 
     @GetMapping("/{id}")

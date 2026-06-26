@@ -20,7 +20,12 @@ public class JugadorController {
     private JugadorRepository jugadorRepository;
 
     @GetMapping
-    public ResponseEntity<PaginatedResponse<Jugador>> getAllJugadores(
+    public List<Jugador> getAllJugadores() {
+        return jugadorRepository.findAll();
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<PaginatedResponse<Jugador>> getAllJugadoresPaged(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "nombre") String sortBy) {
@@ -34,11 +39,6 @@ public class JugadorController {
         var pageResult = jugadorRepository.findAll(pageable);
         var response = PaginatedResponse.of(pageResult.getContent(), page, size, pageResult.getTotalElements());
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/simple")
-    public List<Jugador> getJugadoresSimple() {
-        return jugadorRepository.findAll();
     }
 
     @GetMapping("/usuario/{usuarioId}")

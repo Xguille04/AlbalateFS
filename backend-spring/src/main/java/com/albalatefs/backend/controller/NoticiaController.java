@@ -20,7 +20,12 @@ public class NoticiaController {
     private NoticiaRepository noticiaRepository;
 
     @GetMapping
-    public ResponseEntity<PaginatedResponse<Noticia>> getAllNoticias(
+    public List<Noticia> getAllNoticias() {
+        return noticiaRepository.findAll();
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<PaginatedResponse<Noticia>> getAllNoticiasPaged(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "fechaPublicacion") String sortBy) {
@@ -34,11 +39,6 @@ public class NoticiaController {
         var pageResult = noticiaRepository.findAll(pageable);
         var response = PaginatedResponse.of(pageResult.getContent(), page, size, pageResult.getTotalElements());
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/simple")
-    public List<Noticia> getAllNoticiasSimple() {
-        return noticiaRepository.findAll();
     }
 
     @GetMapping("/{id}")
